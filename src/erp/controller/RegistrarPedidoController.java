@@ -60,18 +60,29 @@ public class RegistrarPedidoController implements Initializable {
     private ObservableList<ItemPedidoVO> listaItensPedido = FXCollections.observableArrayList();
     private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        configurarTabela();
-        configurarComboBoxes();
-        dpDataPedido.setValue(LocalDate.now());
-        atualizarContadorDeItens(); 
-        configurarComboBoxesDinamicos();
-    }
-    
-    private void configurarComboBoxes() {
-        cbItemTipo.getItems().addAll("Masculina", "Feminina", "Infantil");
-    }
+@Override
+public void initialize(URL url, ResourceBundle rb) {
+    configurarTabela();
+    configurarComboBoxes();
+    dpDataPedido.setValue(LocalDate.now());
+    atualizarContadorDeItens();
+}
+
+private void configurarComboBoxes() {
+    cbItemTipo.getItems().addAll("Masculina", "Feminina", "Infantil");
+    cbItemTipo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+        if ("Infantil".equals(newValue)) {
+            cbItemTamanho.setItems(tamanhosInfantil);
+        } else {
+            cbItemTamanho.setItems(tamanhosAdulto);
+        }
+        cbItemTamanho.getSelectionModel().clearSelection();
+    });
+
+    cbItemTipo.getSelectionModel().selectFirst(); 
+    cbItemTamanho.setItems(tamanhosAdulto);
+}
+
 
     private void configurarTabela() {
         tblItensPedido.setItems(listaItensPedido);
@@ -87,7 +98,6 @@ public class RegistrarPedidoController implements Initializable {
         formatarColunaMoeda(colSubtotal);
     }
     
-    // --- NOVO MÉTODO PARA ATUALIZAR O CONTADOR ---
     private void atualizarContadorDeItens() {
         int totalItens = 0;
         for (ItemPedidoVO item : listaItensPedido) {
@@ -122,7 +132,7 @@ public class RegistrarPedidoController implements Initializable {
             listaItensPedido.add(novoItem);
             
             limparFormularioItem();
-            atualizarContadorDeItens(); // Atualiza o contador após adicionar
+            atualizarContadorDeItens(); 
             
         } catch (NumberFormatException e) {
             mostrarAlerta("Erro", "Quantidade e Custo devem ser números válidos.", Alert.AlertType.ERROR);
@@ -131,7 +141,6 @@ public class RegistrarPedidoController implements Initializable {
 
     @FXML
     private void salvarPedidoCompleto() {
-        // (Este método permanece o mesmo)
         if (txtNomeFornecedor.getText().trim().isEmpty() || dpDataPedido.getValue() == null) {
             mostrarAlerta("Erro", "Preencha o Nome do Fornecedor e a Data do Pedido.", Alert.AlertType.ERROR);
             return;
@@ -191,7 +200,6 @@ public class RegistrarPedidoController implements Initializable {
     }
 
     private int findOrCreateProdutoID(Connection con, ItemPedidoVO item) throws SQLException {
-        // (Este método permanece o mesmo)
         String sqlSelect = "SELECT ProdutoID FROM Produtos WHERE Modelo = ? AND Clube = ? AND Tipo = ? AND Tamanho = ?";
         try (PreparedStatement pst = con.prepareStatement(sqlSelect)) {
             pst.setString(1, item.getModelo());
@@ -228,7 +236,7 @@ public class RegistrarPedidoController implements Initializable {
         dpDataPedido.setValue(LocalDate.now());
         listaItensPedido.clear();
         limparFormularioItem();
-        atualizarContadorDeItens(); // Atualiza o contador ao limpar o pedido
+        atualizarContadorDeItens(); 
     }
     
     private void limparFormularioItem() {
@@ -249,7 +257,6 @@ public class RegistrarPedidoController implements Initializable {
     }
     
     private void formatarColunaMoeda(TableColumn<ItemPedidoVO, Double> coluna) {
-        // (Este método permanece o mesmo)
         coluna.setCellFactory(_ -> new TableCell<>() {
             @Override
             protected void updateItem(Double valor, boolean empty) {
@@ -265,30 +272,11 @@ public class RegistrarPedidoController implements Initializable {
     }
 
     private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType tipo) {
-        // (Este método permanece o mesmo)
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
     }
-private void configurarComboBoxesDinamicos() {
-    // Popula o ComboBox de Tipo normalmente
-    cbItemTipo.getItems().addAll("Masculina", "Feminina", "Infantil");
-
-    // Adiciona o listener para trocar os tamanhos
-    cbItemTipo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-        if ("Infantil".equals(newValue)) {
-            cbItemTamanho.setItems(tamanhosInfantil);
-        } else {
-            cbItemTamanho.setItems(tamanhosAdulto);
-        }
-        cbItemTamanho.getSelectionModel().selectFirst(); // Seleciona o primeiro item da nova lista
-    });
-
-    // Define a lista inicial de tamanhos
-    cbItemTipo.getSelectionModel().selectFirst();
-    cbItemTamanho.setItems(tamanhosAdulto);
-}
 
 }

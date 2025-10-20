@@ -330,24 +330,19 @@ listaVendasMaster.add(venda);
         }
     }
 
-    // --- MÉTODO CORRIGIDO ---
     private void atualizarPaineisDeResumo() {
         double custoTotal = 0;
         double totalItens = 0;
-        // Usa um Map para garantir que o faturamento de uma venda não seja somado mais de uma vez
         Map<Integer, Double> faturamentoPorVenda = new HashMap<>();
 
         for (VendaHistoricoVO item : listaFiltrada) {
-            // Custo e total de itens são somados por item, o que está correto
             custoTotal += item.getCustoVendaUnitario() * item.getQuantidade();
             totalItens += item.getQuantidade();
             
-            // Armazena o valor final da VENDA (já com desconto), usando o ID da venda como chave.
-            // Isso evita somar o mesmo valor final para múltiplos itens da mesma venda.
+            
             faturamentoPorVenda.put(item.getVendaId(), item.getValorFinalVenda());
         }
 
-        // Soma os valores finais de todas as vendas únicas que estão na lista filtrada.
         double faturamento = faturamentoPorVenda.values().stream().mapToDouble(d -> d).sum();
         
         double lucro = faturamento - custoTotal;
@@ -484,7 +479,6 @@ private void configurarComboBoxBusca(ComboBox<ProdutoAgregadoVO> cbProduto, Obse
         }
         @Override
         public ProdutoAgregadoVO fromString(String string) {
-            // Permite que o ComboBox encontre o objeto correspondente ao texto
             return listaProdutos.stream()
                     .filter(p -> p.getDescricaoModelo().equals(string))
                     .findFirst()
@@ -492,9 +486,7 @@ private void configurarComboBoxBusca(ComboBox<ProdutoAgregadoVO> cbProduto, Obse
         }
     });
 
-    // Listener CORRIGIDO para evitar o erro
     cbProduto.getEditor().textProperty().addListener((_, _, newValue) -> {
-        // Apenas busca se o campo estiver focado (usuário digitando) e o valor for diferente do já selecionado
         if (newValue != null && cbProduto.isFocused() && (cbProduto.getValue() == null || !newValue.equals(cbProduto.getValue().getDescricaoModelo()))) {
             if (newValue.length() >= 3) {
                 buscarProdutosSugeridos(newValue, listaProdutos);
@@ -562,7 +554,6 @@ private void processarTroca(VendaHistoricoVO vendaOriginal, DetalheTamanho novoP
         con = ConexaoBanco.conectar();
         con.setAutoCommit(false);
 
-        // Devolve o produto antigo ao estoque
         String sqlEstoqueAntigo = "UPDATE Produtos SET QuantidadeEstoque = QuantidadeEstoque + ? WHERE ProdutoID = ?";
         try (PreparedStatement pst = con.prepareStatement(sqlEstoqueAntigo)) {
             pst.setInt(1, vendaOriginal.getQuantidade());
@@ -570,7 +561,6 @@ private void processarTroca(VendaHistoricoVO vendaOriginal, DetalheTamanho novoP
             pst.executeUpdate();
         }
 
-        // Dá baixa no estoque do novo produto
         String sqlEstoqueNovo = "UPDATE Produtos SET QuantidadeEstoque = QuantidadeEstoque - ? WHERE ProdutoID = ?";
         try (PreparedStatement pst = con.prepareStatement(sqlEstoqueNovo)) {
             pst.setInt(1, vendaOriginal.getQuantidade());
@@ -578,7 +568,6 @@ private void processarTroca(VendaHistoricoVO vendaOriginal, DetalheTamanho novoP
             pst.executeUpdate();
         }
 
-        // Atualiza o item da venda para refletir a troca
         String sqlUpdateItemVenda = "UPDATE ItensVenda SET ProdutoID = ?, CustoMedioUnitarioRegistrado = ? WHERE ItemVendaID = ?";
         try (PreparedStatement pst = con.prepareStatement(sqlUpdateItemVenda)) {
             pst.setInt(1, novoProdutoDetalhe.getProdutoId());
@@ -596,14 +585,12 @@ private void processarTroca(VendaHistoricoVO vendaOriginal, DetalheTamanho novoP
         e.printStackTrace();
     } finally {
         if (con != null) try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
-        // Recarrega os dados para refletir a mudança na tabela
         carregarDadosHistorico(dpDataInicio.getValue(), dpDataFim.getValue());
         atualizarPaineisDeResumo();
     }
 }
-// ADICIONE ESTE NOVO MÉTODO
 @FXML
-private void realizarTroca() { // Note que o ActionEvent é opcional aqui
+private void realizarTroca() { 
     VendaHistoricoVO vendaSelecionada = tblHistorico.getSelectionModel().getSelectedItem();
     if (vendaSelecionada != null) {
         abrirDialogoDeTroca(vendaSelecionada);

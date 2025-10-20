@@ -124,39 +124,45 @@ public class AcompanhamentoController implements Initializable {
         tblItensPedido.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    private void carregarPedidos() {
-        listaPedidos.clear();
-        String sql = "SELECT PF.PedidoFornecedorID, PF.DataPedido, PF.NomeFornecedor, PF.StatusPedido, " +
-                     " (SELECT SUM(IP.QuantidadePedida * IP.CustoUnitarioFornecedor) " +
-                     "  FROM ItensPedidoFornecedor IP " +
-                     "  WHERE IP.PedidoFornecedorID = PF.PedidoFornecedorID) AS CustoCalculado " +
-                     "FROM PedidosFornecedor PF " +
-                     "ORDER BY PF.DataPedido DESC";
+private void carregarPedidos() {
+    listaPedidos.clear();
+    String sql = "SELECT PF.PedidoFornecedorID, PF.DataPedido, PF.NomeFornecedor, PF.StatusPedido, " +
+                 " (SELECT SUM(IP.QuantidadePedida * IP.CustoUnitarioFornecedor) " +
+                 "  FROM ItensPedidoFornecedor IP " +
+                 "  WHERE IP.PedidoFornecedorID = PF.PedidoFornecedorID) AS CustoCalculado " +
+                 "FROM PedidosFornecedor PF " +
+                 "ORDER BY " +
+                 "  CASE " +
+                 "    WHEN PF.StatusPedido = 'Realizado' THEN 1 " +
+                 "    WHEN PF.StatusPedido = 'Recebido Parcialmente' THEN 2 " +
+                 "    WHEN PF.StatusPedido = 'Recebido Integralmente' THEN 3 " +
+                 "    ELSE 4 " +
+                 "  END, " +
+                 "PF.DataPedido DESC";
 
-        try (Connection con = ConexaoBanco.conectar();
-             PreparedStatement pst = con.prepareStatement(sql);
-             ResultSet rs = pst.executeQuery()) {
-            
-            while(rs.next()) {
-                listaPedidos.add(new PedidoVO(
-                    rs.getInt("PedidoFornecedorID"),
-                    rs.getDate("DataPedido").toLocalDate(),
-                    rs.getString("NomeFornecedor"),
-                    rs.getDouble("CustoCalculado"),
-                    rs.getString("StatusPedido")
-                ));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            mostrarAlerta("Erro de Banco de Dados", "Não foi possível carregar os pedidos: " + e.getMessage(), Alert.AlertType.ERROR);
+    try (Connection con = ConexaoBanco.conectar();
+         PreparedStatement pst = con.prepareStatement(sql);
+         ResultSet rs = pst.executeQuery()) {
+        
+        while(rs.next()) {
+            listaPedidos.add(new PedidoVO(
+                rs.getInt("PedidoFornecedorID"),
+                rs.getDate("DataPedido").toLocalDate(),
+                rs.getString("NomeFornecedor"),
+                rs.getDouble("CustoCalculado"),
+                rs.getString("StatusPedido")
+            ));
         }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        mostrarAlerta("Erro de Banco de Dados", "Não foi possível carregar os pedidos: " + e.getMessage(), Alert.AlertType.ERROR);
     }
+}
 
-    // --- MÉTODO carregarItensPendentes ALTERADO PARA CALCULAR O TOTAL ---
     private void carregarItensPendentes() {
         listaItensPendentes.clear();
         Map<String, ProdutoEstoque> mapaProdutosPendentes = new HashMap<>();
-        int totalGeralPendente = 0; // <-- Nova variável para a soma total
+        int totalGeralPendente = 0; 
         
         String sql = "SELECT P.Clube, P.Modelo, P.Tipo, P.Tamanho, " +
                      "(IP.QuantidadePedida - IP.QuantidadeRecebida) AS QuantidadePendente " +
