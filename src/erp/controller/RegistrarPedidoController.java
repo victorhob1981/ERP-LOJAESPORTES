@@ -52,8 +52,10 @@ public class RegistrarPedidoController implements Initializable {
     @FXML private Button btnLimparPedido;
     @FXML private Button btnSalvarPedido;
     
-    // --- NOVA VARIÁVEL ADICIONADA ---
     @FXML private Label lblTotalItensPedido;
+    private final ObservableList<String> tamanhosAdulto = FXCollections.observableArrayList("P", "M", "G", "GG", "2GG", "3GG", "4GG");
+    private final ObservableList<String> tamanhosInfantil = FXCollections.observableArrayList("16", "18", "20", "22", "24", "26", "28");
+
 
     private ObservableList<ItemPedidoVO> listaItensPedido = FXCollections.observableArrayList();
     private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -63,12 +65,12 @@ public class RegistrarPedidoController implements Initializable {
         configurarTabela();
         configurarComboBoxes();
         dpDataPedido.setValue(LocalDate.now());
-        atualizarContadorDeItens(); // Chama o contador para inicializar em zero
+        atualizarContadorDeItens(); 
+        configurarComboBoxesDinamicos();
     }
     
     private void configurarComboBoxes() {
         cbItemTipo.getItems().addAll("Masculina", "Feminina", "Infantil");
-        cbItemTamanho.getItems().addAll("P", "M", "G", "GG", "2GG", "3GG", "4GG");
     }
 
     private void configurarTabela() {
@@ -202,7 +204,7 @@ public class RegistrarPedidoController implements Initializable {
             }
         }
         
-        String sqlInsert = "INSERT INTO Produtos (Modelo, Clube, Tipo, Tamanho, PrecoVendaAtual, QuantidadeEstoque, CustoMedioPonderado) VALUES (?, ?, ?, ?, 0, 0, ?)";
+        String sqlInsert = "INSERT INTO Produtos (Modelo, Clube, Tipo, Tamanho, PrecoVendaAtual, QuantidadeEstoque, CustoMedioPonderado) VALUES (?, ?, ?, ?, 140.00, 0, ?)";
         try(PreparedStatement pst = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, item.getModelo());
             pst.setString(2, item.getClube());
@@ -270,4 +272,23 @@ public class RegistrarPedidoController implements Initializable {
         alert.setContentText(mensagem);
         alert.showAndWait();
     }
+private void configurarComboBoxesDinamicos() {
+    // Popula o ComboBox de Tipo normalmente
+    cbItemTipo.getItems().addAll("Masculina", "Feminina", "Infantil");
+
+    // Adiciona o listener para trocar os tamanhos
+    cbItemTipo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+        if ("Infantil".equals(newValue)) {
+            cbItemTamanho.setItems(tamanhosInfantil);
+        } else {
+            cbItemTamanho.setItems(tamanhosAdulto);
+        }
+        cbItemTamanho.getSelectionModel().selectFirst(); // Seleciona o primeiro item da nova lista
+    });
+
+    // Define a lista inicial de tamanhos
+    cbItemTipo.getSelectionModel().selectFirst();
+    cbItemTamanho.setItems(tamanhosAdulto);
+}
+
 }

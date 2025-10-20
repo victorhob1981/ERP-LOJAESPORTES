@@ -262,7 +262,11 @@ public class TelaVendasController implements Initializable {
         if (tamanhoSelecionadoDetalhe.getEstoque() < quantidadeVendida) {
             mostrarAlerta("Erro de Estoque", "Estoque insuficiente. Disponível: " + tamanhoSelecionadoDetalhe.getEstoque(), Alert.AlertType.ERROR);
             return;
+
         }
+
+  
+    
 
         double valorTotalItens = precoUnitarioVenda * quantidadeVendida;
         double valorFinalVenda = valorTotalItens - valorDesconto;
@@ -296,6 +300,14 @@ public class TelaVendasController implements Initializable {
                 ResultSet rsKeys = pstVenda.getGeneratedKeys();
                 if (rsKeys.next()) vendaIdGerado = rsKeys.getLong(1); else throw new SQLException("Falha ao obter ID da venda.");
             }
+
+            String sqlPreco = "UPDATE Produtos SET PrecoVendaAtual = ? WHERE ProdutoID = ? AND PrecoVendaAtual < ?";
+        try (PreparedStatement pstPreco = con.prepareStatement(sqlPreco)) {
+        pstPreco.setDouble(1, precoUnitarioVenda);
+        pstPreco.setInt(2, produtoId);
+        pstPreco.setDouble(3, precoUnitarioVenda);
+        pstPreco.executeUpdate();
+    }   
 
             String sqlItemVenda = "INSERT INTO ItensVenda (VendaID, ProdutoID, Quantidade, PrecoVendaUnitarioRegistrado, CustoMedioUnitarioRegistrado) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement pstItem = con.prepareStatement(sqlItemVenda)) {

@@ -31,31 +31,42 @@ public class CadastroProdutoController {
     @FXML private TableColumn<ProdutoCadastro, Double> colCustoCompra;
 
     private ObservableList<ProdutoCadastro> listaProdutosTemporaria; 
+    private final ObservableList<String> tamanhosAdulto = FXCollections.observableArrayList("P", "M", "G", "GG", "2GG", "3GG", "4GG");
+private final ObservableList<String> tamanhosInfantil = FXCollections.observableArrayList("16", "18", "20", "22", "24", "26", "28");
 
     @FXML
-    public void initialize() {
-        listaProdutosTemporaria = FXCollections.observableArrayList();
-        tblListaProdutos.setItems(listaProdutosTemporaria);
+public void initialize() {
+    listaProdutosTemporaria = FXCollections.observableArrayList();
+    tblListaProdutos.setItems(listaProdutosTemporaria);
 
-       
-        colModelo.setCellValueFactory(cellData -> cellData.getValue().modeloProperty());
-        colClube.setCellValueFactory(cellData -> cellData.getValue().clubeProperty());
-        colTipo.setCellValueFactory(cellData -> cellData.getValue().tipoProperty());
-        colTamanho.setCellValueFactory(cellData -> cellData.getValue().tamanhoProperty());
-        colQuantidade.setCellValueFactory(cellData -> cellData.getValue().quantidadeProperty().asObject());
-        colPrecoVenda.setCellValueFactory(cellData -> cellData.getValue().precoVendaProperty().asObject());
-        colCustoCompra.setCellValueFactory(cellData -> cellData.getValue().custoCompraProperty().asObject()); 
+    colModelo.setCellValueFactory(cellData -> cellData.getValue().modeloProperty());
+    colClube.setCellValueFactory(cellData -> cellData.getValue().clubeProperty());
+    colTipo.setCellValueFactory(cellData -> cellData.getValue().tipoProperty());
+    colTamanho.setCellValueFactory(cellData -> cellData.getValue().tamanhoProperty());
+    colQuantidade.setCellValueFactory(cellData -> cellData.getValue().quantidadeProperty().asObject());
+    colPrecoVenda.setCellValueFactory(cellData -> cellData.getValue().precoVendaProperty().asObject());
+    colCustoCompra.setCellValueFactory(cellData -> cellData.getValue().custoCompraProperty().asObject());
 
-       
-        ObservableList<String> tipoOptions = FXCollections.observableArrayList("Masculina", "Feminina", "Infantil");
-        cbTipo.setItems(tipoOptions);
-        if (!tipoOptions.isEmpty()) cbTipo.getSelectionModel().selectFirst();
+    // Configuração dos ComboBoxes
+    cbTipo.getItems().addAll("Masculina", "Feminina", "Infantil");
 
-        ObservableList<String> tamanhoOptions = FXCollections.observableArrayList("P", "M", "G", "GG", "2GG", "3GG", "4GG"); 
-        
-        cbTamanho.setItems(tamanhoOptions);
-        if (!tamanhoOptions.isEmpty()) cbTamanho.getSelectionModel().selectFirst();
+    // Listener para trocar os tamanhos dinamicamente
+    cbTipo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+        if ("Infantil".equals(newValue)) {
+            cbTamanho.setItems(tamanhosInfantil);
+        } else {
+            cbTamanho.setItems(tamanhosAdulto);
+        }
+        cbTamanho.getSelectionModel().selectFirst();
+    });
+
+    // Define os valores iniciais
+    cbTipo.getSelectionModel().selectFirst();
+    cbTamanho.setItems(tamanhosAdulto);
+    if (!tamanhosAdulto.isEmpty()) {
+        cbTamanho.getSelectionModel().selectFirst();
     }
+}
 
     @FXML
     public void adicionarProdutoNaLista() { 

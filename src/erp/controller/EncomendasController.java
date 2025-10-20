@@ -46,6 +46,8 @@ public class EncomendasController implements Initializable {
 
    
     private final ObservableList<EncomendaVO> listaEncomendas = FXCollections.observableArrayList();
+    private final ObservableList<String> tamanhosAdulto = FXCollections.observableArrayList("P", "M", "G", "GG", "2GG", "3GG", "4GG");
+private final ObservableList<String> tamanhosInfantil = FXCollections.observableArrayList("16", "18", "20", "22", "24", "26", "28");
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -55,19 +57,33 @@ public class EncomendasController implements Initializable {
     }
     
     private void configurarComponentes() {
-        cbTipo.getItems().addAll("Masculina", "Feminina", "Infantil");
-        cbTamanho.getItems().addAll("P", "M", "G", "GG", "XXL", "XXXL", "XXXXL");
-        
-       
-        btnCancelar.setDisable(true);
-        btnMarcarEntregue.setDisable(true);
+    // Popula o ComboBox de Tipo
+    cbTipo.getItems().addAll("Masculina", "Feminina", "Infantil");
 
-        tblEncomendas.getSelectionModel().selectedItemProperty().addListener((_obs, _, newVal) -> {
-            boolean selecionado = newVal != null;
-            btnCancelar.setDisable(!selecionado);
-            btnMarcarEntregue.setDisable(!selecionado);
-        });
-    }
+    // Adiciona o listener para trocar os tamanhos
+    cbTipo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+        if ("Infantil".equals(newValue)) {
+            cbTamanho.setItems(tamanhosInfantil);
+        } else {
+            cbTamanho.setItems(tamanhosAdulto);
+        }
+        cbTamanho.getSelectionModel().selectFirst();
+    });
+
+    // Define os valores iniciais
+    cbTipo.getSelectionModel().selectFirst();
+    cbTamanho.setItems(tamanhosAdulto);
+
+    // Lógica dos botões
+    btnCancelar.setDisable(true);
+    btnMarcarEntregue.setDisable(true);
+
+    tblEncomendas.getSelectionModel().selectedItemProperty().addListener((_obs, _, newVal) -> {
+        boolean selecionado = newVal != null;
+        btnCancelar.setDisable(!selecionado);
+        btnMarcarEntregue.setDisable(!selecionado);
+    });
+}
 
     private void configurarTabela() {
         tblEncomendas.setItems(listaEncomendas);
@@ -129,7 +145,7 @@ public class EncomendasController implements Initializable {
             
             try (PreparedStatement pst = con.prepareStatement(sql)) {
                 pst.setInt(1, clienteId);
-                pst.setString(2, txtClube.getText().trim());
+               pst.setString(2, txtClube.getText().trim().toUpperCase()); // Adicionado .toUpperCase() 
                 pst.setString(3, txtModelo.getText().trim());
                 pst.setString(4, cbTipo.getValue());
                 pst.setString(5, cbTamanho.getValue());

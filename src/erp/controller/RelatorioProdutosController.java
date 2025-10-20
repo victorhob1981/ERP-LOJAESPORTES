@@ -49,7 +49,7 @@ public class RelatorioProdutosController implements Initializable {
         tamanhoComparator = Comparator.comparing(tamanho -> ordemTamanhos.getOrDefault(tamanho, Integer.MAX_VALUE));
     }
 
-    // --- DECLARAÇÕES FXML ATUALIZADAS PARA O NOVO CARD ---
+    // --- DECLARAÇÕES FXML ATUALIZADAS ---
     @FXML private VBox cardTotalVendidos, cardTotalEstoque, cardClubeMaisVendido, cardTamanhoMaisVendido, cardProdutosUnicos;
     @FXML private Label lblTituloTotalVendidos, lblTituloTotalEstoque, lblTituloClubeMaisVendido, lblTituloTamanhoMaisVendido, lblTituloProdutosUnicos;
     @FXML private Label lblTotalVendidos, lblTotalEstoque, lblClubeMaisVendido, lblTamanhoMaisVendido, lblProdutosUnicos;
@@ -59,6 +59,7 @@ public class RelatorioProdutosController implements Initializable {
     @FXML private Button btnGerarRelatorio;
     @FXML private BarChart<String, Number> graficoVendasClube;
     @FXML private BarChart<String, Number> graficoVendasTamanho;
+    @FXML private BarChart<String, Number> graficoEstoqueTamanho; // <-- NOVO GRÁFICO
     @FXML private TableView<ProdutoEstoque> tblEstoqueDetalhado;
     @FXML private TableColumn<ProdutoEstoque, String> colClube;
     @FXML private TableColumn<ProdutoEstoque, String> colModelo;
@@ -78,6 +79,8 @@ public class RelatorioProdutosController implements Initializable {
         graficoVendasClube.setLegendVisible(false);
         graficoVendasTamanho.setAnimated(false);
         graficoVendasTamanho.setLegendVisible(false);
+        graficoEstoqueTamanho.setAnimated(false);
+        graficoEstoqueTamanho.setLegendVisible(false);
         
         atualizarRelatorio();
     }
@@ -91,10 +94,9 @@ public class RelatorioProdutosController implements Initializable {
         }
         carregarDadosVendas(dataInicio, dataFim);
         carregarDadosEstoque();
-        carregarTotalProdutosUnicos(); // <-- Chamada para o novo método
+        carregarTotalProdutosUnicos();
     }
     
-    // --- NOVO MÉTODO PARA CARREGAR O TOTAL DE PRODUTOS ÚNICOS ---
     private void carregarTotalProdutosUnicos() {
         String sql = "SELECT COUNT(*) AS total FROM (" +
                      "  SELECT 1 FROM Produtos " +
@@ -115,15 +117,12 @@ public class RelatorioProdutosController implements Initializable {
         }
     }
 
-
     private void atualizarCoresDosCards(String clube) {
-        // Paleta de cores padrão e moderna
         aplicarEstiloCard(cardTotalVendidos, "#27ae60");
         aplicarEstiloCard(cardTotalEstoque, "#e67e22");
         aplicarEstiloCard(cardTamanhoMaisVendido, "#8e44ad");
-        aplicarEstiloCard(cardProdutosUnicos, "#2980b9"); // Azul para o novo card
+        aplicarEstiloCard(cardProdutosUnicos, "#2980b9");
 
-        // Define cor dinâmica para o card do clube
         String corPrincipalClube;
         switch (clube.toUpperCase()) {
             case "FLAMENGO": corPrincipalClube = "#c0392b"; break;
@@ -144,15 +143,12 @@ public class RelatorioProdutosController implements Initializable {
             Label valor = (Label) card.getChildren().get(1);
             
             titulo.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;");
-            
             String tamanhoFonte = (card == cardClubeMaisVendido) ? "24px" : "32px";
             valor.setStyle("-fx-font-size: " + tamanhoFonte + "; -fx-font-weight: bold; -fx-text-fill: " + corPrincipal + ";");
         }
     }
 
-
     private void carregarDadosVendas(LocalDate dataInicio, LocalDate dataFim) {
-        // ... (lógica existente para buscar os dados)
         Map<String, Integer> vendasPorClube = new HashMap<>();
         Map<String, Integer> vendasPorTamanho = new HashMap<>();
         int totalPecasVendidas = 0;
@@ -198,6 +194,7 @@ public class RelatorioProdutosController implements Initializable {
     private void carregarDadosEstoque() {
         listaEstoqueDetalhado.clear();
         Map<String, ProdutoEstoque> mapaProdutosAgregados = new HashMap<>();
+        Map<String, Integer> estoquePorTamanho = new HashMap<>();
         int totalGeralDeItens = 0;
 
         String sql = "SELECT Modelo, Clube, Tipo, Tamanho, QuantidadeEstoque " +
@@ -211,19 +208,24 @@ public class RelatorioProdutosController implements Initializable {
             while (rs.next()) {
                 int quantidade = rs.getInt("QuantidadeEstoque"); 
                 totalGeralDeItens += quantidade;
-                
+
                 String clube = rs.getString("Clube");
                 String modelo = rs.getString("Modelo");
                 String tipo = rs.getString("Tipo");
+                String tamanho = rs.getString("Tamanho");
+
                 String chaveProduto = clube + "|" + modelo + "|" + tipo;
-                
+
                 ProdutoEstoque produto = mapaProdutosAgregados.get(chaveProduto);
                 if (produto == null) {
                     produto = new ProdutoEstoque(modelo, clube, tipo);
                     mapaProdutosAgregados.put(chaveProduto, produto);
                 }
-                
-                produto.setQuantidadeParaTamanho(rs.getString("Tamanho"), quantidade);
+
+                produto.setQuantidadeParaTamanho(tamanho, quantidade);
+
+                // acumula estoque por tamanho
+                estoquePorTamanho.merge(tamanho, quantidade, Integer::sum);
             }
             
             List<ProdutoEstoque> produtosComEstoque = mapaProdutosAgregados.values()
@@ -233,6 +235,9 @@ public class RelatorioProdutosController implements Initializable {
 
             listaEstoqueDetalhado.setAll(produtosComEstoque);
             lblTotalEstoque.setText(String.valueOf(totalGeralDeItens));
+
+            // gráfico novo
+            atualizarGrafico(graficoEstoqueTamanho, estoquePorTamanho, tamanhoComparator, "#2ecc71");
 
         } catch (SQLException e) {
             e.printStackTrace();
