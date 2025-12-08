@@ -89,6 +89,6 @@ O projeto foi construído seguindo o padrão arquitetural **MVC (Model-View-Cont
 
 Estudante apaixonado por desenvolvimento de software, com foco em Java e soluções corporativas. Buscando oportunidade de estágio para aplicar conhecimentos em arquitetura de software e banco de dados.
 
-[![LinkedIn] https://www.linkedin.com/in/victor-ho-barbosa 
-[![Email] victorhob23@gmail.com
+LinkedIn: https://www.linkedin.com/in/victor-ho-barbosa 
+Email: victorhob23@gmail.com
 ---
