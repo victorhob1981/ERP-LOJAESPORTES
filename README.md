@@ -65,7 +65,7 @@ O projeto foi construído seguindo o padrão arquitetural **MVC (Model-View-Cont
 ### Passo a Passo
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/SEU-USUARIO/NOME-DO-REPO.git](https://github.com/SEU-USUARIO/NOME-DO-REPO.git)
+    git clone [https://github.com/victorhob1981/ERP-LOJAESPORTES.git]
     ```
 2.  **Configuração do Banco:**
     - Crie um banco de dados no MySQL chamado `gemini_erp` (ou ajuste no arquivo `ConexaoBanco.java`).
