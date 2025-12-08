@@ -26,12 +26,15 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent; // Import adicionado
+import javafx.scene.layout.HBox; // Import adicionado
 import javafx.scene.layout.VBox;
 
 public class RelatorioProdutosController implements Initializable {
@@ -49,31 +52,33 @@ public class RelatorioProdutosController implements Initializable {
         tamanhoComparator = Comparator.comparing(tamanho -> ordemTamanhos.getOrDefault(tamanho, Integer.MAX_VALUE));
     }
 
-    // --- DECLARAÇÕES FXML ATUALIZADAS ---
     @FXML private VBox cardTotalVendidos, cardTotalEstoque, cardClubeMaisVendido, cardTamanhoMaisVendido, cardProdutosUnicos;
     @FXML private Label lblTituloTotalVendidos, lblTituloTotalEstoque, lblTituloClubeMaisVendido, lblTituloTamanhoMaisVendido, lblTituloProdutosUnicos;
     @FXML private Label lblTotalVendidos, lblTotalEstoque, lblClubeMaisVendido, lblTamanhoMaisVendido, lblProdutosUnicos;
     
     @FXML private DatePicker dpDataInicio;
     @FXML private DatePicker dpDataFim;
+    @FXML private ComboBox<String> cbClube;
+    @FXML private ComboBox<String> cbCategoria;
     @FXML private Button btnGerarRelatorio;
+    
     @FXML private BarChart<String, Number> graficoVendasClube;
     @FXML private BarChart<String, Number> graficoVendasTamanho;
-    @FXML private BarChart<String, Number> graficoEstoqueTamanho; // <-- NOVO GRÁFICO
+    @FXML private BarChart<String, Number> graficoEstoqueTamanho;
+    
     @FXML private TableView<ProdutoEstoque> tblEstoqueDetalhado;
     @FXML private TableColumn<ProdutoEstoque, String> colClube;
     @FXML private TableColumn<ProdutoEstoque, String> colModelo;
     @FXML private TableColumn<ProdutoEstoque, String> colTipo;
     @FXML private TableColumn<ProdutoEstoque, Integer> colP, colM, colG, colGG, col2GG, col3GG, col4GG, colTotal;
 
-    private ObservableList<ProdutoEstoque> listaEstoqueDetalhado = FXCollections.observableArrayList();
+    private final ObservableList<ProdutoEstoque> listaEstoqueDetalhado = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         dpDataInicio.setValue(LocalDate.now().withDayOfMonth(1));
         dpDataFim.setValue(LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth()));
         configurarTabelaEstoque();
-        btnGerarRelatorio.setOnAction(_ -> atualizarRelatorio());
         
         graficoVendasClube.setAnimated(false);
         graficoVendasClube.setLegendVisible(false);
@@ -85,6 +90,7 @@ public class RelatorioProdutosController implements Initializable {
         atualizarRelatorio();
     }
 
+    @FXML
     private void atualizarRelatorio() {
         LocalDate dataInicio = dpDataInicio.getValue();
         LocalDate dataFim = dpDataFim.getValue();
@@ -118,33 +124,29 @@ public class RelatorioProdutosController implements Initializable {
     }
 
     private void atualizarCoresDosCards(String clube) {
-        aplicarEstiloCard(cardTotalVendidos, "#27ae60");
-        aplicarEstiloCard(cardTotalEstoque, "#e67e22");
-        aplicarEstiloCard(cardTamanhoMaisVendido, "#8e44ad");
-        aplicarEstiloCard(cardProdutosUnicos, "#2980b9");
-
+        // As cores já estão no FXML, esta função agora só ajusta a cor do card do clube mais vendido
         String corPrincipalClube;
         switch (clube.toUpperCase()) {
             case "FLAMENGO": corPrincipalClube = "#c0392b"; break;
             case "BOTAFOGO": case "VASCO": corPrincipalClube = "#2c3e50"; break;
             case "FLUMINENSE": corPrincipalClube = "#880E4F"; break;
-            default: corPrincipalClube = "#2980b9"; break;
+            default: corPrincipalClube = "#2980b9"; break; // Cor padrão
         }
+        
+        // Aplica o estilo dinâmico apenas no card que precisa mudar
         aplicarEstiloCard(cardClubeMaisVendido, corPrincipalClube);
     }
     
+    // MÉTODO CORRIGIDO
     private void aplicarEstiloCard(VBox card, String corPrincipal) {
-        String style = "-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);";
-        style += "-fx-border-color: " + corPrincipal + "; -fx-border-width: 0 0 0 4;";
+        // Mantém a estrutura de estilo do FXML e apenas sobrepõe a cor da borda e do texto
+        String style = card.getStyle() + String.format("-fx-border-color:%s; -fx-border-width:0 0 0 4;", corPrincipal);
         card.setStyle(style);
         
-        if (card.getChildren().size() >= 2) {
-            Label titulo = (Label) card.getChildren().get(0);
+        if (card.getChildren().size() >= 2 && card.getChildren().get(1) instanceof Label) {
             Label valor = (Label) card.getChildren().get(1);
-            
-            titulo.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;");
-            String tamanhoFonte = (card == cardClubeMaisVendido) ? "24px" : "32px";
-            valor.setStyle("-fx-font-size: " + tamanhoFonte + "; -fx-font-weight: bold; -fx-text-fill: " + corPrincipal + ";");
+            String tamanhoFonte = (card == cardClubeMaisVendido) ? "22" : "30";
+            valor.setStyle(String.format("-fx-font-size:%spx; -fx-font-weight:bold; -fx-text-fill:%s;", tamanhoFonte, corPrincipal));
         }
     }
 
@@ -157,7 +159,7 @@ public class RelatorioProdutosController implements Initializable {
                      "FROM ItensVenda iv " +
                      "JOIN Produtos p ON iv.ProdutoID = p.ProdutoID " +
                      "JOIN Vendas v ON iv.VendaID = v.VendaID " +
-                     "AND v.DataVenda BETWEEN ? AND ? " +
+                     "WHERE v.DataVenda BETWEEN ? AND ? " +
                      "GROUP BY p.clube, p.tamanho";
 
         try (Connection con = ConexaoBanco.conectar();
@@ -223,8 +225,6 @@ public class RelatorioProdutosController implements Initializable {
                 }
 
                 produto.setQuantidadeParaTamanho(tamanho, quantidade);
-
-                // acumula estoque por tamanho
                 estoquePorTamanho.merge(tamanho, quantidade, Integer::sum);
             }
             
@@ -235,8 +235,6 @@ public class RelatorioProdutosController implements Initializable {
 
             listaEstoqueDetalhado.setAll(produtosComEstoque);
             lblTotalEstoque.setText(String.valueOf(totalGeralDeItens));
-
-            // gráfico novo
             atualizarGrafico(graficoEstoqueTamanho, estoquePorTamanho, tamanhoComparator, "#2ecc71");
 
         } catch (SQLException e) {
@@ -292,7 +290,7 @@ public class RelatorioProdutosController implements Initializable {
     }
     
     private void formatarCelulaQuantidade(TableColumn<ProdutoEstoque, Integer> coluna) {
-        coluna.setCellFactory(_ -> new TableCell<>() {
+        coluna.setCellFactory(_-> new TableCell<>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);

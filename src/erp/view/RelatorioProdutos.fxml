@@ -10,146 +10,174 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<VBox spacing="20.0" style="-fx-padding: 25; -fx-background-color: #f4f7fa;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="erp.controller.RelatorioProdutosController">
-   <children>
-      <!-- Título -->
-      <Label text="Relatório de Produtos">
-         <font>
-            <Font name="System Bold" size="26.0" />
-         </font>
-      </Label>
+<BorderPane xmlns="http://javafx.com/javafx/19" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="erp.controller.RelatorioProdutosController" 
+            prefHeight="820" prefWidth="1200" 
+            style="-fx-background-color: #f4f7fa;">
 
-      <!-- Filtros -->
-      <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);">
-         <children>
-            <Label text="Período:" style="-fx-font-weight: bold;" />
-            <DatePicker fx:id="dpDataInicio" />
-            <Label text="até" />
-            <DatePicker fx:id="dpDataFim" />
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12" 
+              style="-fx-background-color: white; -fx-background-radius: 6; -fx-padding: 12 16 12 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 6, 0, 0, 2);">
+            <children>
+                <Label style="-fx-font-size:22px;" text="📊" />
+                <Label style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;" text="Relatório de Produtos" />
+                <Region HBox.hgrow="ALWAYS" />
 
-            <Label text="Clube:" style="-fx-font-weight: bold;" />
-            <ComboBox fx:id="cbClube" promptText="Selecione Clube" />
+                <Label style="-fx-font-weight:bold; -fx-text-fill:#34495e;" text="Período:" />
+                <DatePicker fx:id="dpDataInicio" />
+                <Label style="-fx-text-fill:#34495e;" text="até" />
+                <DatePicker fx:id="dpDataFim" />
 
-            <Label text="Categoria:" style="-fx-font-weight: bold;" />
-            <ComboBox fx:id="cbCategoria" promptText="Selecione Categoria" />
+                <Label style="-fx-font-weight:bold; -fx-text-fill:#34495e;" text="Clube:" />
+                <ComboBox fx:id="cbClube" prefWidth="180" promptText="Selecione Clube" />
 
-            <Button fx:id="btnGerarRelatorio" mnemonicParsing="false" style="-fx-base: #3498db; -fx-text-fill: white; -fx-font-weight: bold;" text="Gerar Relatório" />
-         </children>
-      </HBox>
-      
-      <!-- KPIs -->
-      <GridPane hgap="20.0">
-        <columnConstraints>
-          <ColumnConstraints percentWidth="20.0" />
-          <ColumnConstraints percentWidth="20.0" />
-          <ColumnConstraints percentWidth="20.0" />
-          <ColumnConstraints percentWidth="20.0" />
-          <ColumnConstraints percentWidth="20.0" />
-        </columnConstraints>
-         <children>
-            <VBox fx:id="cardTotalVendidos" alignment="CENTER" spacing="5.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 8;">
-               <children>
-                  <Label fx:id="lblTituloTotalVendidos" text="PEÇAS VENDIDAS" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" />
-                  <Label fx:id="lblTotalVendidos" style="-fx-font-size: 32px; -fx-font-weight: bold;" text="0" />
-               </children>
-            </VBox>
-            <VBox fx:id="cardTotalEstoque" alignment="CENTER" spacing="5.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 8;" GridPane.columnIndex="1">
-               <children>
-                  <Label fx:id="lblTituloTotalEstoque" text="TOTAL EM ESTOQUE" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" />
-                  <Label fx:id="lblTotalEstoque" style="-fx-font-size: 32px; -fx-font-weight: bold;" text="0" />
-               </children>
-            </VBox>
-            <VBox fx:id="cardClubeMaisVendido" alignment="CENTER" spacing="5.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 8;" GridPane.columnIndex="2">
-               <children>
-                  <Label fx:id="lblTituloClubeMaisVendido" text="CLUBE MAIS VENDIDO" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" />
-                  <Label fx:id="lblClubeMaisVendido" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="-" />
-               </children>
-            </VBox>
-            <VBox fx:id="cardTamanhoMaisVendido" alignment="CENTER" spacing="5.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 8;" GridPane.columnIndex="3">
-               <children>
-                  <Label fx:id="lblTituloTamanhoMaisVendido" text="TAMANHO MAIS VENDIDO" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" />
-                  <Label fx:id="lblTamanhoMaisVendido" style="-fx-font-size: 32px; -fx-font-weight: bold;" text="-" />
-               </children>
-            </VBox>
-            <VBox fx:id="cardProdutosUnicos" alignment="CENTER" spacing="5.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 8;" GridPane.columnIndex="4">
-               <children>
-                  <Label fx:id="lblTituloProdutosUnicos" text="ITENS UNICOS" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;" />
-                  <Label fx:id="lblProdutosUnicos" style="-fx-font-size: 32px; -fx-font-weight: bold;" text="0" />
-               </children>
-            </VBox>
-         </children>
-      </GridPane>
-      
-      <!-- Gráficos: Vendas por Clube (esquerda) + Vendas/Estoque por Tamanho (direita) -->
-      <GridPane hgap="20.0" VBox.vgrow="ALWAYS">
-        <columnConstraints>
-          <ColumnConstraints percentWidth="50.0" />
-          <ColumnConstraints percentWidth="50.0" />
-        </columnConstraints>
+                <Label style="-fx-font-weight:bold; -fx-text-fill:#34495e;" text="Categoria:" />
+                <ComboBox fx:id="cbCategoria" prefWidth="160" promptText="Selecione Categoria" />
 
-         <children>
-            <!-- Vendas por Clube -->
-            <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8;">
-               <children>
-                  <Label text="Vendas por Clube" style="-fx-font-weight: bold; -fx-font-size: 16;" />
-                  <BarChart fx:id="graficoVendasClube" barGap="5.0" categoryGap="25.0">
-                     <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
-                     <yAxis><NumberAxis side="LEFT" /></yAxis>
-                  </BarChart>
-               </children>
-            </VBox>
+                <Button fx:id="btnGerarRelatorio" onAction="#atualizarRelatorio" 
+                        style="-fx-background-color:#3498db; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:8; -fx-padding:8 16 8 16;" 
+                        text="Gerar Relatório" />
+            </children>
+        </HBox>
+    </top>
 
-            <!-- Direita: Vendas por Tamanho (linha 0) -->
-            <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8;" GridPane.columnIndex="1">
-               <children>
-                  <Label text="Vendas por Tamanho" style="-fx-font-weight: bold; -fx-font-size: 16;" />
-                  <BarChart fx:id="graficoVendasTamanho" barGap="5.0" categoryGap="15.0">
-                     <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
-                     <yAxis><NumberAxis side="LEFT" /></yAxis>
-                  </BarChart>
-               </children>
-            </VBox>
+    <center>
+        <VBox spacing="18" style="-fx-padding: 18;">
+            <children>
+                <GridPane hgap="14" vgap="12">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="20" />
+                        <ColumnConstraints percentWidth="20" />
+                        <ColumnConstraints percentWidth="20" />
+                        <ColumnConstraints percentWidth="20" />
+                        <ColumnConstraints percentWidth="20" />
+                    </columnConstraints>
+                    <children>
+                        <VBox fx:id="cardTotalVendidos" alignment="CENTER_LEFT" spacing="8" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding:14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2); -fx-border-color:#27ae60; -fx-border-width:0 0 0 4;">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label style="-fx-font-size:18;" text="🛒" />
+                                    <Label fx:id="lblTituloTotalVendidos" style="-fx-font-size:13; -fx-font-weight:bold; -fx-text-fill:#7f8c8d;" text="PEÇAS VENDIDAS" />
+                                </HBox>
+                                <Label fx:id="lblTotalVendidos" style="-fx-font-size:30; -fx-font-weight:bold; -fx-text-fill:#27ae60;" text="0" />
+                            </children>
+                        </VBox>
 
-            <!-- Direita: Estoque por Tamanho (linha 1) -->
-            <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8;" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <children>
-                  <Label text="Estoque por Tamanho" style="-fx-font-weight: bold; -fx-font-size: 16;" />
-                  <BarChart fx:id="graficoEstoqueTamanho" barGap="5.0" categoryGap="15.0">
-                     <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
-                     <yAxis><NumberAxis side="LEFT" /></yAxis>
-                  </BarChart>
-               </children>
-            </VBox>
-         </children>
-      </GridPane>
-      
-      <!-- Tabela Detalhada -->
-      <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8;" VBox.vgrow="ALWAYS">
-         <children>
-            <Label text="Estoque Detalhado" style="-fx-font-weight: bold; -fx-font-size: 16;" />
-            <TableView fx:id="tblEstoqueDetalhado" VBox.vgrow="ALWAYS">
-              <columns>
-                <TableColumn fx:id="colClube" text="Clube" prefWidth="120"/>
-                <TableColumn fx:id="colModelo" text="Modelo" prefWidth="200"/>
-                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="100"/>
-                <TableColumn fx:id="colP" text="P" prefWidth="50"/>
-                <TableColumn fx:id="colM" text="M" prefWidth="50"/>
-                <TableColumn fx:id="colG" text="G" prefWidth="50"/>
-                <TableColumn fx:id="colGG" text="GG" prefWidth="50"/>
-                <TableColumn fx:id="col2GG" text="2GG" prefWidth="50"/>
-                <TableColumn fx:id="col3GG" text="3GG" prefWidth="50"/>
-                <TableColumn fx:id="col4GG" text="4GG" prefWidth="50"/>
-                <TableColumn fx:id="colTotal" text="Total" prefWidth="75"/>
-              </columns>
-               <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
-            </TableView>
-         </children>
-      </VBox>
-   </children>
-</VBox>
+                        <VBox fx:id="cardTotalEstoque" alignment="CENTER_LEFT" spacing="8" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding:14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2); -fx-border-color:#e67e22; -fx-border-width:0 0 0 4;" GridPane.columnIndex="1">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label style="-fx-font-size:18;" text="📦" />
+                                    <Label fx:id="lblTituloTotalEstoque" style="-fx-font-size:13; -fx-font-weight:bold; -fx-text-fill:#7f8c8d;" text="TOTAL EM ESTOQUE" />
+                                </HBox>
+                                <Label fx:id="lblTotalEstoque" style="-fx-font-size:30; -fx-font-weight:bold; -fx-text-fill:#e67e22;" text="0" />
+                            </children>
+                        </VBox>
+
+                        <VBox fx:id="cardClubeMaisVendido" alignment="CENTER_LEFT" spacing="8" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding:14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2); -fx-border-color:#c0392b; -fx-border-width:0 0 0 4;" GridPane.columnIndex="2">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label style="-fx-font-size:18;" text="🏆" />
+                                    <Label fx:id="lblTituloClubeMaisVendido" style="-fx-font-size:13; -fx-font-weight:bold; -fx-text-fill:#7f8c8d;" text="CLUBE MAIS VENDIDO" />
+                                </HBox>
+                                <Label fx:id="lblClubeMaisVendido" style="-fx-font-size:22; -fx-font-weight:bold; -fx-text-fill:#c0392b;" text="-" />
+                            </children>
+                        </VBox>
+
+                        <VBox fx:id="cardTamanhoMaisVendido" alignment="CENTER_LEFT" spacing="8" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding:14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2); -fx-border-color:#8e44ad; -fx-border-width:0 0 0 4;" GridPane.columnIndex="3">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label style="-fx-font-size:18;" text="📏" />
+                                    <Label fx:id="lblTituloTamanhoMaisVendido" style="-fx-font-size:13; -fx-font-weight:bold; -fx-text-fill:#7f8c8d;" text="TAMANHO MAIS VENDIDO" />
+                                </HBox>
+                                <Label fx:id="lblTamanhoMaisVendido" style="-fx-font-size:30; -fx-font-weight:bold; -fx-text-fill:#8e44ad;" text="-" />
+                            </children>
+                        </VBox>
+
+                        <VBox fx:id="cardProdutosUnicos" alignment="CENTER_LEFT" spacing="8" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding:14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2); -fx-border-color:#2980b9; -fx-border-width:0 0 0 4;" GridPane.columnIndex="4">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label style="-fx-font-size:18;" text="🔢" />
+                                    <Label fx:id="lblTituloProdutosUnicos" style="-fx-font-size:13; -fx-font-weight:bold; -fx-text-fill:#7f8c8d;" text="ITENS ÚNICOS" />
+                                </HBox>
+                                <Label fx:id="lblProdutosUnicos" style="-fx-font-size:30; -fx-font-weight:bold; -fx-text-fill:#2980b9;" text="0" />
+                            </children>
+                        </VBox>
+                    </children>
+                </GridPane>
+
+                <GridPane hgap="14" vgap="12">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50" />
+                        <ColumnConstraints percentWidth="50" />
+                    </columnConstraints>
+                    <children>
+                        <VBox style="-fx-background-color:white; -fx-background-radius:8; -fx-padding:16; -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 2);" GridPane.columnIndex="0">
+                            <children>
+                                <Label style="-fx-font-size:15; -fx-font-weight:bold; -fx-text-fill:#2c3e50;" text="Vendas por Clube" />
+                                <BarChart fx:id="graficoVendasClube" prefHeight="280">
+                                    <xAxis><CategoryAxis /></xAxis>
+                                    <yAxis><NumberAxis /></yAxis>
+                                </BarChart>
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="12" GridPane.columnIndex="1">
+                           <children>
+                              <VBox style="-fx-background-color:white; -fx-background-radius:8; -fx-padding:12; -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 2);">
+                                 <children>
+                                      <Label style="-fx-font-size:15; -fx-font-weight:bold; -fx-text-fill:#2c3e50;" text="Vendas por Tamanho" />
+                                      <BarChart fx:id="graficoVendasTamanho" prefHeight="130">
+                                          <xAxis><CategoryAxis /></xAxis>
+                                          <yAxis><NumberAxis /></yAxis>
+                                      </BarChart>
+                                 </children>
+                              </VBox>
+                              <VBox style="-fx-background-color:white; -fx-background-radius:8; -fx-padding:12; -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 2);">
+                                 <children>
+                                      <Label style="-fx-font-size:15; -fx-font-weight:bold; -fx-text-fill:#2c3e50;" text="Estoque por Tamanho" />
+                                      <BarChart fx:id="graficoEstoqueTamanho" prefHeight="130">
+                                          <xAxis><CategoryAxis /></xAxis>
+                                          <yAxis><NumberAxis /></yAxis>
+                                      </BarChart>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                    </children>
+                </GridPane>
+
+                <VBox spacing="10" style="-fx-background-color:white; -fx-background-radius:8; -fx-padding:16; -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.03), 6, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                    <children>
+                        <Label style="-fx-font-size:16; -fx-font-weight:bold; -fx-text-fill:#2c3e50;" text="Estoque Detalhado" />
+                        <TableView fx:id="tblEstoqueDetalhado" prefHeight="320" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colClube" prefWidth="140" text="Clube" />
+                                <TableColumn fx:id="colModelo" prefWidth="240" text="Modelo" />
+                                <TableColumn fx:id="colTipo" prefWidth="120" text="Tipo" />
+                                <TableColumn fx:id="colP" prefWidth="60" text="P" />
+                                <TableColumn fx:id="colM" prefWidth="60" text="M" />
+                                <TableColumn fx:id="colG" prefWidth="60" text="G" />
+                                <TableColumn fx:id="colGG" prefWidth="60" text="GG" />
+                                <TableColumn fx:id="col2GG" prefWidth="60" text="2GG" />
+                                <TableColumn fx:id="col3GG" prefWidth="60" text="3GG" />
+                                <TableColumn fx:id="col4GG" prefWidth="60" text="4GG" />
+                                <TableColumn fx:id="colTotal" prefWidth="90" text="Total" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>
