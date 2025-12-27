@@ -1,85 +1,256 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.SVGPath?>
 
-<VBox alignment="CENTER" spacing="20.0" style="-fx-padding: 25;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="erp.controller.TelaInicialController">
+<StackPane xmlns="http://javafx.com/javafx/23.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="erp.controller.TelaInicialController"
+           styleClass="page">
+
+   <padding>
+      <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
+   </padding>
+
    <children>
-      <Label text="Painel de Controle Principal">
-         <font><Font name="System Bold" size="28.0" /></font>
-      </Label>
-      
-      <HBox alignment="CENTER" spacing="20.0">
+      <!-- Container com largura confortável (similar ao layout web) -->
+      <VBox maxWidth="1200.0" spacing="22.0" StackPane.alignment="TOP_LEFT">
          <children>
-            <VBox alignment="CENTER" minWidth="180.0" style="-fx-padding: 15; -fx-background-color: #E8F5E9; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label text="FATURAMENTO (MÊS)" />
-                  <Label fx:id="lblFaturamentoMes" text="R$ 0,00"><font><Font name="System Bold" size="22.0" /></font></Label>
-               </children>
-            </VBox>
-            <VBox alignment="CENTER" minWidth="180.0" style="-fx-padding: 15; -fx-background-color: #E3F2FD; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label text="LUCRO (MÊS)" />
-                  <Label fx:id="lblLucroMes" text="R$ 0,00"><font><Font name="System Bold" size="22.0" /></font></Label>
-               </children>
-            </VBox>
-            <VBox alignment="CENTER" minWidth="180.0" style="-fx-padding: 15; -fx-background-color: #F3E5F5; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label text="ENCOMENDAS ABERTAS" />
-                  <Label fx:id="lblEncomendasAbertas" text="0"><font><Font name="System Bold" size="22.0" /></font></Label>
-               </children>
-            </VBox>
-            <VBox alignment="CENTER" minWidth="180.0" style="-fx-padding: 15; -fx-background-color: #FFF3E0; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label text="PEDIDOS EM ABERTO" />
-                  <Label fx:id="lblPedidosAbertos" text="0"><font><Font name="System Bold" size="22.0" /></font></Label>
-               </children>
-            </VBox>
-         </children>
-      </HBox>
-      
-      <TitledPane animated="false" collapsible="false" text="Navegação Principal">
-         <font><Font name="System Bold" size="14.0" /></font>
-         <content>
-            <TilePane alignment="CENTER" hgap="15.0" prefColumns="4" vgap="15.0">
-               <padding><Insets top="15.0" /></padding>
-               <children>
-                  <Button onAction="#navNovaVenda" prefHeight="50.0" prefWidth="180.0" style="-fx-base: #E8F5E9;" text="Nova Venda" />
-                  <Button onAction="#navHistoricoVendas" prefHeight="50.0" prefWidth="180.0" style="-fx-base: #E3F2FD;" text="Histórico de Vendas" />
-                  <Button onAction="#navEstoque" prefHeight="50.0" prefWidth="180.0" style="-fx-base: #F3E5F5;" text="Visualizar Estoque" />
-                  <Button onAction="#navFinanceiro" prefHeight="50.0" prefWidth="180.0" style="-fx-base: #FFF3E0;" text="Resumo Financeiro" />
-                  <Button onAction="#navNovaEncomenda" prefHeight="50.0" prefWidth="180.0" style="-fx-base: #E8F5E9;" text="Nova Encomenda" />
-                  <Button onAction="#navAcompanharPedidos" prefHeight="50.0" prefWidth="180.0" style="-fx-base: #E3F2FD;" text="Acompanhar Pedidos" />
-                  
-                  <Button onAction="#navNovoPedido" prefHeight="50.0" prefWidth="180.0" style="-fx-base: #FFF3E0;" text="Novo Pedido" />
 
+            <!-- Header -->
+            <VBox spacing="4.0">
+               <children>
+                  <Label text="Painel de Controle Principal" styleClass="page-title" />
+                  <Label text="Visão geral do sistema de gestão empresarial" styleClass="page-subtitle" />
                </children>
-            </TilePane>
-         </content>
-      </TitledPane>
+            </VBox>
 
-      <HBox spacing="20.0" VBox.vgrow="ALWAYS">
-         <children>
-            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+            <!-- KPI cards -->
+            <HBox spacing="16.0">
                <children>
-                  <Label text="Encomendas de Clientes" />
-                  <ListView fx:id="lvEncomendasPendentes" prefHeight="150.0" />
+                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                     <padding>
+                        <Insets top="16.0" right="18.0" bottom="16.0" left="18.0" />
+                     </padding>
+                     <children>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="FATURAMENTO (MÊS)" styleClass="kpi-title" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <!-- trending-up (simplificado) -->
+                              <SVGPath content="M23 6L13.5 15.5L8.5 10.5L1 18 M17 6H23V12">
+                                 <styleClass>
+                                    <String fx:value="icon" />
+                                    <String fx:value="kpi-icon" />
+                                 </styleClass>
+                              </SVGPath>
+                           </children>
+                        </HBox>
+                        <Label fx:id="lblFaturamentoMes" text="R$ 0,00" styleClass="kpi-value" />
+                     </children>
+                  </VBox>
+
+                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                     <padding>
+                        <Insets top="16.0" right="18.0" bottom="16.0" left="18.0" />
+                     </padding>
+                     <children>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="LUCRO (MÊS)" styleClass="kpi-title" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <SVGPath content="M23 6L13.5 15.5L8.5 10.5L1 18 M17 6H23V12">
+                                 <styleClass>
+                                    <String fx:value="icon" />
+                                    <String fx:value="kpi-icon" />
+                                    <String fx:value="kpi-icon-success" />
+                                 </styleClass>
+                              </SVGPath>
+                           </children>
+                        </HBox>
+                        <Label fx:id="lblLucroMes" text="R$ 0,00" styleClass="kpi-value" />
+                     </children>
+                  </VBox>
+
+                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                     <padding>
+                        <Insets top="16.0" right="18.0" bottom="16.0" left="18.0" />
+                     </padding>
+                     <children>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="ENCOMENDAS ABERTAS" styleClass="kpi-title" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <!-- box (lucide) -->
+                              <Group>
+                                 <SVGPath content="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                                    <styleClass>
+                                       <String fx:value="icon" />
+                                       <String fx:value="kpi-icon" />
+                                    </styleClass>
+                                 </SVGPath>
+                                 <SVGPath content="M3.27 6.96L12 12.01L20.73 6.96">
+                                    <styleClass>
+                                       <String fx:value="icon" />
+                                       <String fx:value="kpi-icon" />
+                                    </styleClass>
+                                 </SVGPath>
+                                 <SVGPath content="M12 22.08V12">
+                                    <styleClass>
+                                       <String fx:value="icon" />
+                                       <String fx:value="kpi-icon" />
+                                    </styleClass>
+                                 </SVGPath>
+                              </Group>
+                           </children>
+                        </HBox>
+                        <Label fx:id="lblEncomendasAbertas" text="0" styleClass="kpi-value" />
+                     </children>
+                  </VBox>
+
+                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                     <padding>
+                        <Insets top="16.0" right="18.0" bottom="16.0" left="18.0" />
+                     </padding>
+                     <children>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="PEDIDOS EM ABERTO" styleClass="kpi-title" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <!-- shopping-cart -->
+                              <Group>
+                                 <SVGPath content="M1 1H5L7.68 14.39A2 2 0 0 0 9.68 16H19.4A2 2 0 0 0 21.4 14.39L23 6H6">
+                                    <styleClass>
+                                       <String fx:value="icon" />
+                                       <String fx:value="kpi-icon" />
+                                    </styleClass>
+                                 </SVGPath>
+                                 <Circle centerX="9" centerY="21" radius="1">
+                                    <styleClass>
+                                       <String fx:value="icon" />
+                                       <String fx:value="kpi-icon" />
+                                    </styleClass>
+                                 </Circle>
+                                 <Circle centerX="20" centerY="21" radius="1">
+                                    <styleClass>
+                                       <String fx:value="icon" />
+                                       <String fx:value="kpi-icon" />
+                                    </styleClass>
+                                 </Circle>
+                              </Group>
+                           </children>
+                        </HBox>
+                        <Label fx:id="lblPedidosAbertos" text="0" styleClass="kpi-value" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+
+            <!-- Navegação principal -->
+            <VBox spacing="12.0">
+               <children>
+                  <Label text="Navegação Principal" styleClass="section-title" />
+
+                  <TilePane hgap="16.0" vgap="16.0" prefColumns="5">
+                     <children>
+                        <Button onAction="#navNovaVenda" text="Nova Venda" styleClass="nav-tile">
+                           <graphic>
+                              <Group>
+                                 <SVGPath styleClass="icon" content="M1 1H5L7.68 14.39A2 2 0 0 0 9.68 16H19.4A2 2 0 0 0 21.4 14.39L23 6H6" />
+                                 <Circle styleClass="icon" centerX="9" centerY="21" radius="1" />
+                                 <Circle styleClass="icon" centerX="20" centerY="21" radius="1" />
+                              </Group>
+                           </graphic>
+                        </Button>
+
+                        <Button onAction="#navHistoricoVendas" text="Histórico de Vendas" styleClass="nav-tile">
+                           <graphic>
+                              <SVGPath styleClass="icon" content="M8 6H21 M8 12H21 M8 18H21 M3 6H3.01 M3 12H3.01 M3 18H3.01" />
+                           </graphic>
+                        </Button>
+
+                        <Button onAction="#navEstoque" text="Visualizar Estoque" styleClass="nav-tile">
+                           <graphic>
+                              <Group>
+                                 <SVGPath styleClass="icon" content="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                 <SVGPath styleClass="icon" content="M3.27 6.96L12 12.01L20.73 6.96" />
+                                 <SVGPath styleClass="icon" content="M12 22.08V12" />
+                              </Group>
+                           </graphic>
+                        </Button>
+
+                        <Button onAction="#navFinanceiro" text="Resumo Financeiro" styleClass="nav-tile">
+                           <graphic>
+                              <SVGPath styleClass="icon" content="M4 19.5A2.5 2.5 0 0 1 6.5 17H20 M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                           </graphic>
+                        </Button>
+
+                        <Button onAction="#navNovaEncomenda" text="Nova Encomenda">
+                           <styleClass>
+                              <String fx:value="nav-tile" />
+                              <String fx:value="nav-tile-highlight" />
+                           </styleClass>
+                           <graphic>
+                              <SVGPath styleClass="icon" content="M16 18L22 12L16 6 M8 6L2 12L8 18" />
+                           </graphic>
+                        </Button>
+
+                        <Button onAction="#navAcompanharPedidos" text="Acompanhar Pedidos" styleClass="nav-tile">
+                           <graphic>
+                              <SVGPath styleClass="icon" content="M3 12h18 M12 3v18" />
+                           </graphic>
+                        </Button>
+
+                        <Button onAction="#navNovoPedido" text="Novo Pedido" styleClass="nav-tile">
+                           <graphic>
+                              <SVGPath styleClass="icon" content="M3 3h18v18H3z" />
+                           </graphic>
+                        </Button>
+                     </children>
+                  </TilePane>
                </children>
             </VBox>
-            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+
+            <!-- Listas -->
+            <HBox spacing="18.0">
                <children>
-                  <Label text="Pedidos a Fornecedores" />
-                  <ListView fx:id="lvPedidosEmTransito" prefHeight="150.0" />
+                  <VBox HBox.hgrow="ALWAYS" spacing="12.0">
+                     <styleClass>
+                        <String fx:value="card" />
+                        <String fx:value="list-card" />
+                     </styleClass>
+                     <children>
+                        <Label text="Encomendas de Clientes" styleClass="list-title" />
+                        <ListView fx:id="lvEncomendasPendentes" prefHeight="180.0" />
+                     </children>
+                  </VBox>
+
+                  <VBox HBox.hgrow="ALWAYS" spacing="12.0">
+                     <styleClass>
+                        <String fx:value="card" />
+                        <String fx:value="list-card" />
+                     </styleClass>
+                     <children>
+                        <Label text="Pedidos a Fornecedores" styleClass="list-title" />
+                        <ListView fx:id="lvPedidosEmTransito" prefHeight="180.0" />
+                     </children>
+                  </VBox>
                </children>
-            </VBox>
+            </HBox>
+
          </children>
-      </HBox>
+      </VBox>
    </children>
-</VBox>
+</StackPane>
