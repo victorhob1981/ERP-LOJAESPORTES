@@ -11,7 +11,7 @@ Este projeto teve início como parte do portfólio acadêmico do curso de **Sist
 A aplicação resolve problemas reais de gestão comercial, substituindo controles manuais em planilhas por um sistema centralizado, confiável e extensível. O sistema permite o controle completo de grades de produtos (tamanhos e tipos), fluxo de caixa, gestão de encomendas de clientes e pedidos a fornecedores.
 
 ### 🏠 Página Inicial do Sistema
-![Página Inicial](images/Paginainicial.png)
+![Página Inicial](images/PaginaInicial.png)
 
 ---
 
