@@ -9,131 +9,215 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.FlowPane?>
 
-<VBox fx:id="vendaFormRoot" spacing="15.0" style="-fx-padding: 25;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="erp.controller.TelaVendasController">
+<VBox fx:id="vendaFormRoot"
+      maxWidth="1200.0"
+      spacing="22.0"
+      styleClass="page"
+      xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="erp.controller.TelaVendasController">
+
+   <padding>
+      <Insets top="22.0" right="22.0" bottom="22.0" left="22.0" />
+   </padding>
+
    <children>
-      <Label text="Registrar Nova Venda">
-         <font>
-            <Font name="System Bold" size="22.0" />
-         </font>
-         <VBox.margin>
-            <Insets bottom="10.0" />
-         </VBox.margin>
-      </Label>
-      <Separator prefWidth="200.0" />
-      
-      <GridPane hgap="10.0" vgap="12.0">
-        <columnConstraints>
-          <ColumnConstraints halignment="RIGHT" hgrow="NEVER" minWidth="10.0" prefWidth="140.0" />
-          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="220.0" />
-          <ColumnConstraints halignment="RIGHT" hgrow="NEVER" minWidth="10.0" prefWidth="160.0" />
-          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="220.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+
+      <!-- Header -->
+      <VBox spacing="6.0">
          <children>
-            <Label text="Produto:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <ComboBox fx:id="cbProduto" prefWidth="Infinity" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="0" />
-            
-            <Label text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <ComboBox fx:id="cbTipo" prefWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            
-            <FlowPane fx:id="fpTamanhosDisponiveis" hgap="10.0" prefHeight="200.0" prefWidth="200.0" vgap="10.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
-               <padding>
-                  <Insets top="5.0" />
-               </padding>
-            </FlowPane>
-            
-            <Label text="Quantidade:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <TextField fx:id="txtQuantidadeVendida" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Preço Unitário (R$):" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <TextField fx:id="txtValorVenda" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            
-            <Label text="Nome do Cliente:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-            <TextField fx:id="txtNomeCliente" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label text="Data da Venda:" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <DatePicker fx:id="dpDataVenda" prefWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-            
-            <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="5" />
-            
-            <Label text="Desconto (R$):" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-            <TextField fx:id="txtDesconto" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Label text="Pago:" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-            <CheckBox fx:id="chkPago" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="6">
-               <GridPane.margin>
-                  <Insets left="5.0" />
-               </GridPane.margin>
-            </CheckBox>
-            
-            <Label text="Data Prometida Pgto:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-            <DatePicker fx:id="dpDataPrometida" prefWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Label text="Método de Pagamento:" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-            <ComboBox fx:id="cbMetodoPagamento" prefWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+            <Label text="Nova Venda" styleClass="page-title" />
+            <Label text="Registre uma venda, aplique desconto e confirme o pagamento"
+                   styleClass="page-subtitle" />
          </children>
-      </GridPane>
-      <Separator prefWidth="200.0" />
-      <VBox spacing="8.0" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-border-radius: 5; -fx-background-color: #f9f9f9; -fx-background-radius: 5;">
-         <children>
-            <Label text="RESUMO DA VENDA">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets bottom="5.0" />
-               </VBox.margin>
-            </Label>
-            <HBox spacing="10.0">
-               <children>
-                  <Label minWidth="120.0" style="-fx-font-weight: bold;" text="Subtotal:" />
-                  <Label fx:id="lblSubtotalCalculado" text="R$ 0,00" />
-               </children>
-            </HBox>
-            <HBox spacing="10.0">
-               <children>
-                  <Label minWidth="120.0" style="-fx-font-weight: bold;" text="Desconto Aplicado:" />
-                  <Label fx:id="lblDescontoAplicado" text="R$ 0,00" />
-               </children>
-            </HBox>
-            <Separator />
-            <HBox spacing="10.0">
-               <children>
-                  <Label minWidth="120.0" style="-fx-font-weight: bold; -fx-font-size: 15px;" text="TOTAL A PAGAR:" />
-                  <Label fx:id="lblTotalAPagar" style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: green;" text="R$ 0,00" />
-               </children>
-            </HBox>
-         </children>
-         <VBox.margin>
-            <Insets bottom="10.0" top="10.0" />
-         </VBox.margin>
       </VBox>
+
+      <!-- Two-column layout: form (left) + summary (right) -->
+      <HBox spacing="18.0">
+         <children>
+
+            <!-- Left: Form card -->
+            <VBox spacing="14.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox spacing="14.0" styleClass="card">
+                     <padding>
+                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
+                     </padding>
+
+                     <children>
+                        <Label text="Detalhes da venda" styleClass="section-title" />
+
+                        <GridPane hgap="12.0" vgap="12.0">
+                           <columnConstraints>
+                              <ColumnConstraints halignment="LEFT" hgrow="NEVER" minWidth="10.0" prefWidth="140.0" />
+                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="240.0" />
+                              <ColumnConstraints halignment="LEFT" hgrow="NEVER" minWidth="10.0" prefWidth="160.0" />
+                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="240.0" />
+                           </columnConstraints>
+
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+
+                           <children>
+
+                              <Label text="Produto" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                              <ComboBox fx:id="cbProduto" prefWidth="Infinity"
+                                        GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="0" />
+
+                              <Label text="Tipo" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="cbTipo" prefWidth="Infinity"
+                                        GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                              <Label text="Tamanhos" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                              <FlowPane fx:id="fpTamanhosDisponiveis"
+                                        hgap="10.0" vgap="10.0"
+                                        prefWidth="Infinity"
+                                        GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                 <padding>
+                                    <Insets top="4.0" bottom="4.0" />
+                                 </padding>
+                              </FlowPane>
+
+                              <Label text="Quantidade" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                              <TextField fx:id="txtQuantidadeVendida"
+                                         GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                              <Label text="Preço unitário (R$)" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                              <TextField fx:id="txtValorVenda"
+                                         GridPane.columnIndex="3" GridPane.rowIndex="3" />
+
+                              <Label text="Cliente" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                              <TextField fx:id="txtNomeCliente"
+                                         GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                              <Label text="Data da venda" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                              <DatePicker fx:id="dpDataVenda" prefWidth="Infinity"
+                                          GridPane.columnIndex="3" GridPane.rowIndex="4" />
+
+                              <Separator GridPane.columnSpan="4" GridPane.rowIndex="5" />
+
+                              <Label text="Desconto (R$)" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                              <TextField fx:id="txtDesconto"
+                                         GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                              <Label text="Pago" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                              <CheckBox fx:id="chkPago" mnemonicParsing="false"
+                                        GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+                                 <GridPane.margin>
+                                    <Insets left="2.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+
+                              <Label text="Data prometida" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                              <DatePicker fx:id="dpDataPrometida" prefWidth="Infinity"
+                                          GridPane.columnIndex="1" GridPane.rowIndex="7" />
+
+                              <Label text="Método de pagamento" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                              <ComboBox fx:id="cbMetodoPagamento" prefWidth="Infinity"
+                                        GridPane.columnIndex="3" GridPane.rowIndex="7" />
+
+                           </children>
+                        </GridPane>
+
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+
+            <!-- Right: Summary + month stats -->
+            <VBox spacing="14.0" prefWidth="360.0">
+               <children>
+
+                  <VBox spacing="12.0" styleClass="card">
+                     <padding>
+                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
+                     </padding>
+
+                     <children>
+                        <Label text="Resumo" styleClass="section-title" />
+
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="Subtotal" styleClass="kpi-title" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="lblSubtotalCalculado" text="R$ 0,00" />
+                           </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="Desconto aplicado" styleClass="kpi-title" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="lblDescontoAplicado" text="R$ 0,00" />
+                           </children>
+                        </HBox>
+
+                        <Separator />
+
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="Total a pagar" styleClass="kpi-title" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="lblTotalAPagar" text="R$ 0,00" styleClass="kpi-value-success" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+
+                  <VBox fx:id="infoGlobalVendasBox" spacing="8.0" styleClass="card">
+                     <padding>
+                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
+                     </padding>
+
+                     <children>
+                        <Label text="Indicadores do mês" styleClass="section-title" />
+                        <Label fx:id="lblFaturamento"
+                               styleClass="muted-label"
+                               text="Faturamento do Mês (Pago): R$ 0,00" />
+                        <Label fx:id="lblQuantidadeVendas"
+                               styleClass="muted-label"
+                               text="Vendas no Mês: 0" />
+                     </children>
+                  </VBox>
+
+               </children>
+            </VBox>
+
+         </children>
+      </HBox>
+
+      <!-- Actions -->
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
-            <Button fx:id="btnLimparCampos" mnemonicParsing="false" onAction="#limparFormularioVenda" prefWidth="130.0" text="Limpar Campos" />
-            <Button fx:id="btnSalvarVenda" mnemonicParsing="false" prefHeight="35.0" prefWidth="130.0" style="-fx-base: #5cb85c; -fx-text-fill: white; -fx-font-weight: bold;" text="Salvar Venda" />
+            <Button fx:id="btnLimparCampos"
+                    mnemonicParsing="false"
+                    onAction="#limparFormularioVenda"
+                    prefWidth="150.0"
+                    text="Limpar Campos"
+                    styleClass="btn-secondary" />
+
+            <Button fx:id="btnSalvarVenda"
+                    mnemonicParsing="false"
+                    prefWidth="150.0"
+                    text="Salvar Venda"
+                    styleClass="btn-primary" />
          </children>
-         <VBox.margin>
-            <Insets top="10.0" />
-         </VBox.margin>
       </HBox>
-      <VBox fx:id="infoGlobalVendasBox" alignment="TOP_RIGHT" spacing="5.0" style="-fx-padding: 15 0 0 0;">
-         <children>
-            <Label fx:id="lblFaturamento" style="-fx-font-size: 10px; -fx-text-fill: gray;" text="Faturamento do Mês (Pago): R$ 0,00" />
-            <Label fx:id="lblQuantidadeVendas" style="-fx-font-size: 10px; -fx-text-fill: gray;" text="Vendas no Mês: 0" />
-         </children>
-      </VBox>
+
    </children>
 </VBox>

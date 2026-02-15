@@ -224,3 +224,89 @@
 .icon-on-primary {
     -fx-stroke: #ffffff;
 }
+/* ---------- Forms & actions (shared across screens) ---------- */
+
+.field-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -fx-muted;
+}
+
+.muted-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-muted-foreground;
+}
+
+.kpi-value-success {
+    -fx-font-size: 26px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #16a34a;
+}
+
+/* Inputs */
+.text-field,
+.password-field,
+.text-area {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: -fx-border;
+    -fx-border-width: 1;
+    -fx-padding: 8 10 8 10;
+}
+
+.combo-box-base,
+.date-picker {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: -fx-border;
+    -fx-border-width: 1;
+}
+
+.combo-box-base > .list-cell {
+    -fx-padding: 7 10 7 10;
+}
+
+.date-picker > .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Focus ring */
+.text-field:focused,
+.password-field:focused,
+.text-area:focused,
+.combo-box-base:focused,
+.date-picker:focused {
+    -fx-border-color: -fx-primary;
+    -fx-effect: dropshadow(gaussian, rgba(79,70,229,0.25), 12, 0.25, 0, 0);
+}
+
+/* Buttons */
+.button {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 8 12 8 12;
+    -fx-font-weight: 700;
+}
+
+.btn-primary {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: #ffffff;
+}
+
+.btn-primary:hover {
+    -fx-background-color: -fx-primary-600;
+}
+
+.btn-secondary {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #0f172a;
+    -fx-border-color: -fx-border;
+    -fx-border-width: 1;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: -fx-bg;
+}

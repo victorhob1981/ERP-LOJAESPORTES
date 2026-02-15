@@ -23,24 +23,30 @@ import javafx.scene.layout.VBox;
 
 public class MainLayoutController implements Initializable {
 
-    @FXML private BorderPane mainBorderPane, contentArea;
-    @FXML private MenuBar mainMenuBar;
-    @FXML private VBox sidebar;
-    @FXML private Button btnNavDashboard, btnNavNovaVenda, btnNavHistorico, btnNavEstoque;
-    @FXML private Button btnNavNovoPedido, btnNavAcompanhar, btnNavEncomendas, btnNavFinanceiro;
-    
+    @FXML
+    private BorderPane mainBorderPane, contentArea;
+    @FXML
+    private MenuBar mainMenuBar;
+    @FXML
+    private VBox sidebar;
+    @FXML
+    private Button btnNavDashboard, btnNavNovaVenda, btnNavHistorico, btnNavEstoque;
+    @FXML
+    private Button btnNavNovoPedido, btnNavAcompanhar, btnNavEncomendas, btnNavFinanceiro;
+
     // --- MUDANÇA 1: Declarar o novo botão do FXML ---
-    @FXML private Button btnNavRelatorioProdutos;
+    @FXML
+    private Button btnNavRelatorioProdutos;
 
     private List<Button> navButtons;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        navButtons = Arrays.asList(btnNavDashboard, btnNavNovaVenda, btnNavHistorico, btnNavEstoque, 
-                                     btnNavNovoPedido, btnNavAcompanhar, btnNavEncomendas, btnNavFinanceiro,
-                                     // --- MUDANÇA 2: Adicionar o novo botão à lista ---
-                                     btnNavRelatorioProdutos);
-        irParaDashboard(null); 
+        navButtons = Arrays.asList(btnNavDashboard, btnNavNovaVenda, btnNavHistorico, btnNavEstoque,
+                btnNavNovoPedido, btnNavAcompanhar, btnNavEncomendas, btnNavFinanceiro,
+                // --- MUDANÇA 2: Adicionar o novo botão à lista ---
+                btnNavRelatorioProdutos);
+        irParaDashboard(null);
     }
 
     public void loadPage(String fxmlFileName, Button activeButton) {
@@ -65,7 +71,7 @@ public class MainLayoutController implements Initializable {
             mostrarAlertaErroDetalhado(fxmlFileName, e);
         }
     }
-    
+
     private void setActiveButton(Button activeButton) {
         for (Button btn : navButtons) {
             if (btn != null) { // Adicionado verificação de nulo por segurança
@@ -77,25 +83,61 @@ public class MainLayoutController implements Initializable {
         }
     }
 
-    @FXML public void irParaDashboard(ActionEvent event) { loadPage("TelaInicialContent.fxml", btnNavDashboard); }
-    @FXML public void irParaRegistrarVenda(ActionEvent event) { loadPage("TelaVendas.fxml", btnNavNovaVenda); }
-    @FXML public void irParaHistoricoVendas(ActionEvent event) { loadPage("TelaHistoricoVendas.fxml", btnNavHistorico); }
-    @FXML public void irParaGerenciarEstoque(ActionEvent event) { loadPage("TelaEstoque.fxml", btnNavEstoque); }
-    @FXML public void irParaAcompanhamento(ActionEvent event) { loadPage("TelaAcompanhamento.fxml", btnNavAcompanhar); }
-    @FXML public void irParaEncomendas(ActionEvent event) { loadPage("TelaEncomendas.fxml", btnNavEncomendas); }
-    @FXML public void irParaFinanceiro(ActionEvent event) { loadPage("TelaFinanceiro.fxml", btnNavFinanceiro); }
-    @FXML public void irParaRegistrarPedido(ActionEvent event) { loadPage("TelaRegistrarPedido.fxml", btnNavNovoPedido); }
+    @FXML
+    public void irParaDashboard(ActionEvent event) {
+        loadPage("TelaInicialContent.fxml", btnNavDashboard);
+    }
 
-    @FXML private void acaoSair(ActionEvent event) { Platform.exit(); }
-    @FXML private void mostrarSobre(ActionEvent event) { 
+    @FXML
+    public void irParaRegistrarVenda(ActionEvent event) {
+        loadPage("TelaVendasTeste.fxml", btnNavNovaVenda);
+    }
+
+    @FXML
+    public void irParaHistoricoVendas(ActionEvent event) {
+        loadPage("TelaHistoricoVendas.fxml", btnNavHistorico);
+    }
+
+    @FXML
+    public void irParaGerenciarEstoque(ActionEvent event) {
+        loadPage("TelaEstoque.fxml", btnNavEstoque);
+    }
+
+    @FXML
+    public void irParaAcompanhamento(ActionEvent event) {
+        loadPage("TelaAcompanhamento.fxml", btnNavAcompanhar);
+    }
+
+    @FXML
+    public void irParaEncomendas(ActionEvent event) {
+        loadPage("TelaEncomendas.fxml", btnNavEncomendas);
+    }
+
+    @FXML
+    public void irParaFinanceiro(ActionEvent event) {
+        loadPage("TelaFinanceiro.fxml", btnNavFinanceiro);
+    }
+
+    @FXML
+    public void irParaRegistrarPedido(ActionEvent event) {
+        loadPage("TelaRegistrarPedido.fxml", btnNavNovoPedido);
+    }
+
+    @FXML
+    private void acaoSair(ActionEvent event) {
+        Platform.exit();
+    }
+
+    @FXML
+    private void mostrarSobre(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sobre");
         alert.setHeaderText("ERP 2.0 - Sistema de Gestão de Loja Esportiva");
         alert.setContentText("Desenvolvido por Victor Hugo de Oliveira Barbosa\nJoão Carlos\n" +
-                             "Versão: 2.0.0");
+                "Versão: 2.0.0");
         alert.showAndWait();
     }
-    
+
     private void mostrarAlertaErroDetalhado(String fxmlFile, Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Erro Crítico de Carregamento");
@@ -111,11 +153,11 @@ public class MainLayoutController implements Initializable {
         textArea.setWrapText(true);
         textArea.setMaxWidth(Double.MAX_VALUE);
         textArea.setMaxHeight(Double.MAX_VALUE);
-        
+
         VBox dialogPaneContent = new VBox();
         Label label = new Label("Detalhes técnicos do erro:");
         dialogPaneContent.getChildren().addAll(label, textArea);
-        
+
         alert.getDialogPane().setExpandableContent(dialogPaneContent);
         alert.getDialogPane().setExpanded(true);
         alert.showAndWait();

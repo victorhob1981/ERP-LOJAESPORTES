@@ -6,10 +6,9 @@ import java.sql.SQLException;
 
 public class ConexaoBanco {
 
-     
     private static final String URL = "jdbc:mysql://localhost:3306/gemini_erp?allowPublicKeyRetrieval=true";
-    private static final String USUARIO = "root";    
-    private static final String SENHA = "Senhalp3"; 
+    private static final String USUARIO = "root";
+    private static final String SENHA = "Senhalp3";
 
     public static Connection conectar() throws SQLException {
         return DriverManager.getConnection(URL, USUARIO, SENHA);
