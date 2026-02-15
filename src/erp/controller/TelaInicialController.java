@@ -114,7 +114,7 @@ public class TelaInicialController implements Initializable {
 
     private void carregarListaPedidos() {
         ObservableList<String> pedidos = FXCollections.observableArrayList();
-        String sql = "SELECT PedidoFornecedorID, NomeFornecedor, StatusPedido FROM PedidosFornecedor WHERE StatusPedido IN ('Realizado', 'EmTransito', 'Recebido Parcialmente') ORDER BY DataPedido ASC LIMIT 5";
+        String sql = "SELECT PedidoFornecedorID, NomeFornecedor, StatusPedido FROM PedidosFornecedor WHERE StatusPedido IN ('Realizado', 'Recebido Parcialmente') ORDER BY DataPedido ASC LIMIT 5";
         
         try (Connection con = ConexaoBanco.conectar();
              PreparedStatement pst = con.prepareStatement(sql);

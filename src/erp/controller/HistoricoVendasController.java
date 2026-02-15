@@ -167,14 +167,14 @@ static {
              "JOIN Vendas V ON IV.VendaID = V.VendaID " +
              "JOIN Produtos P ON IV.ProdutoID = P.ProdutoID " +
              "LEFT JOIN Clientes C ON V.ClienteID = C.ClienteID " +
-             "WHERE V.DataVenda BETWEEN ? AND ? " +
+             "WHERE V.DataVenda >= ? AND V.DataVenda < ? " +
              "ORDER BY V.VendaID DESC";
 
         try (Connection con = UTIL.ConexaoBanco.conectar();
              PreparedStatement pst = con.prepareStatement(sql)) {
 
             pst.setDate(1, java.sql.Date.valueOf(dataInicio));
-            pst.setDate(2, java.sql.Date.valueOf(dataFim));
+            pst.setDate(2, java.sql.Date.valueOf(dataFim.plusDays(1)));
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {

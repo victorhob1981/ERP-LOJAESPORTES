@@ -30,9 +30,9 @@ public class MainLayoutController implements Initializable {
     @FXML
     private VBox sidebar;
     @FXML
-    private Button btnNavDashboard, btnNavNovaVenda, btnNavHistorico, btnNavEstoque;
+    private Button btnNavDashboard, btnNavRegistrarVenda, btnNavHistoricoVendas, btnNavGerenciarEstoque;
     @FXML
-    private Button btnNavNovoPedido, btnNavAcompanhar, btnNavEncomendas, btnNavFinanceiro;
+    private Button btnNavRegistrarPedido, btnNavAcompanhamento, btnNavEncomendas, btnNavFinanceiro;
 
     // --- MUDANÇA 1: Declarar o novo botão do FXML ---
     @FXML
@@ -42,8 +42,8 @@ public class MainLayoutController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        navButtons = Arrays.asList(btnNavDashboard, btnNavNovaVenda, btnNavHistorico, btnNavEstoque,
-                btnNavNovoPedido, btnNavAcompanhar, btnNavEncomendas, btnNavFinanceiro,
+        navButtons = Arrays.asList(btnNavDashboard, btnNavRegistrarVenda, btnNavHistoricoVendas, btnNavGerenciarEstoque,
+                btnNavRegistrarPedido, btnNavAcompanhamento, btnNavEncomendas, btnNavFinanceiro,
                 // --- MUDANÇA 2: Adicionar o novo botão à lista ---
                 btnNavRelatorioProdutos);
         irParaDashboard(null);
@@ -90,22 +90,22 @@ public class MainLayoutController implements Initializable {
 
     @FXML
     public void irParaRegistrarVenda(ActionEvent event) {
-        loadPage("TelaVendasTeste.fxml", btnNavNovaVenda);
+        loadPage("TelaVendas.fxml", btnNavRegistrarVenda);
     }
 
     @FXML
     public void irParaHistoricoVendas(ActionEvent event) {
-        loadPage("TelaHistoricoVendas.fxml", btnNavHistorico);
+        loadPage("TelaHistoricoVendas.fxml", btnNavHistoricoVendas);
     }
 
     @FXML
     public void irParaGerenciarEstoque(ActionEvent event) {
-        loadPage("TelaEstoque.fxml", btnNavEstoque);
+        loadPage("TelaEstoque.fxml", btnNavGerenciarEstoque);
     }
 
     @FXML
     public void irParaAcompanhamento(ActionEvent event) {
-        loadPage("TelaAcompanhamento.fxml", btnNavAcompanhar);
+        loadPage("TelaAcompanhamento.fxml", btnNavAcompanhamento);
     }
 
     @FXML
@@ -120,7 +120,7 @@ public class MainLayoutController implements Initializable {
 
     @FXML
     public void irParaRegistrarPedido(ActionEvent event) {
-        loadPage("TelaRegistrarPedido.fxml", btnNavNovoPedido);
+        loadPage("TelaRegistrarPedido.fxml", btnNavRegistrarPedido);
     }
 
     @FXML
@@ -169,3 +169,5 @@ public class MainLayoutController implements Initializable {
         loadPage("RelatorioProdutos.fxml", btnNavRelatorioProdutos);
     }
 }
+
+

@@ -157,14 +157,14 @@ public class RelatorioProdutosController implements Initializable {
                      "FROM ItensVenda iv " +
                      "JOIN Produtos p ON iv.ProdutoID = p.ProdutoID " +
                      "JOIN Vendas v ON iv.VendaID = v.VendaID " +
-                     "WHERE v.DataVenda BETWEEN ? AND ? " +
+                     "WHERE v.DataVenda >= ? AND v.DataVenda < ? " +
                      "GROUP BY p.clube, p.tamanho";
 
         try (Connection con = ConexaoBanco.conectar();
              PreparedStatement pst = con.prepareStatement(sql)) {
 
             pst.setDate(1, java.sql.Date.valueOf(dataInicio));
-            pst.setDate(2, java.sql.Date.valueOf(dataFim));
+            pst.setDate(2, java.sql.Date.valueOf(dataFim.plusDays(1)));
             ResultSet rs = pst.executeQuery();
 
             while(rs.next()) {

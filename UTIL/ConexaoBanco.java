@@ -6,9 +6,18 @@ import java.sql.SQLException;
 
 public class ConexaoBanco {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/gemini_erp?allowPublicKeyRetrieval=true";
-    private static final String USUARIO = "root";
-    private static final String SENHA = "Senhalp3";
+    private static final String URL = getEnvOrDefault("ERP_DB_URL",
+            "jdbc:mysql://localhost:3306/gemini_erp?allowPublicKeyRetrieval=true");
+    private static final String USUARIO = getEnvOrDefault("ERP_DB_USER", "root");
+    private static final String SENHA = getEnvOrDefault("ERP_DB_PASSWORD", "Senhalp3");
+
+    private static String getEnvOrDefault(String key, String fallback) {
+        String value = System.getenv(key);
+        if (value == null || value.isBlank()) {
+            return fallback;
+        }
+        return value;
+    }
 
     public static Connection conectar() throws SQLException {
         return DriverManager.getConnection(URL, USUARIO, SENHA);

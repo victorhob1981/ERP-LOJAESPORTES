@@ -11,73 +11,96 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="erp.controller.EstoqueController">
-   <content>
-      <VBox spacing="15.0" style="-fx-padding: 25;">
-         <children>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <children>
-                  <Label text="Visualizar Estoque">
-                     <font><Font name="System Bold" size="22.0" /></font>
-                  </Label>
-                  <Region HBox.hgrow="ALWAYS" />
-                  <Button fx:id="btnIrParaCadastro" onAction="#irParaCadastroEstoque" style="-fx-base: #5cb85c;" text="Ir para Cadastro" />
-               </children>
-               <VBox.margin><Insets bottom="10.0" /></VBox.margin>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="20.0">
-               <children>
-                  <Label text="Filtrar por Clube:" />
-                  <ComboBox fx:id="cbClube" prefWidth="250.0" />
-                  <Region HBox.hgrow="ALWAYS" />
-                  <Label fx:id="lblTotalCamisas" style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Total de Peças em Estoque: 0" />
-               </children>
-               <padding><Insets bottom="5.0" /></padding>
-            </HBox>
-            
-            <Label text="Estoque">
-               <font><Font name="System Bold" size="14.0" /></font>
-            </Label>
-            <TableView fx:id="tblEstoque">
-               <columns>
-                  <TableColumn fx:id="colClubeNome" prefWidth="150.0" text="Clube" />
-                  <TableColumn fx:id="colModelo" prefWidth="250.0" text="Modelo" />
-                  <TableColumn fx:id="colTipo" prefWidth="100.0" text="Tipo" />
-                  <TableColumn fx:id="colP" minWidth="50.0" text="P" />
-                  <TableColumn fx:id="colM" minWidth="50.0" text="M" />
-                  <TableColumn fx:id="colG" minWidth="50.0" text="G" />
-                  <TableColumn fx:id="colGG" minWidth="50.0" text="GG" />
-                  <TableColumn fx:id="col2GG" minWidth="50.0" text="2GG" />
-                  <TableColumn fx:id="col3GG" minWidth="50.0" text="3GG" />
-                  <TableColumn fx:id="col4GG" minWidth="50.0" text="4GG" />
-                  <TableColumn fx:id="colQuantidade" prefWidth="75.0" text="Total" />
-               </columns>
-               <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
-            </TableView>
-            
-            <Separator prefWidth="200.0" />
-            
-            <Label text="Estoque Infantil">
-               <font><Font name="System Bold" size="14.0" /></font>
-            </Label>
-            <TableView fx:id="tblEstoqueInfantil">
-               <columns>
-                  <TableColumn fx:id="colClubeNomeInfantil" prefWidth="150.0" text="Clube" />
-                  <TableColumn fx:id="colModeloInfantil" prefWidth="250.0" text="Modelo" />
-                  <TableColumn fx:id="col16" minWidth="50.0" text="16" />
-                  <TableColumn fx:id="col18" minWidth="50.0" text="18" />
-                  <TableColumn fx:id="col20" minWidth="50.0" text="20" />
-                  <TableColumn fx:id="col22" minWidth="50.0" text="22" />
-                  <TableColumn fx:id="col24" minWidth="50.0" text="24" />
-                  <TableColumn fx:id="col26" minWidth="50.0" text="26" />
-                  <TableColumn fx:id="col28" minWidth="50.0" text="28" />
-                  <TableColumn fx:id="colQuantidadeInfantil" prefWidth="75.0" text="Total" />
-               </columns>
-               <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
-            </TableView>
-         </children>
-      </VBox>
-   </content>
+<ScrollPane fitToWidth="true"
+            xmlns="http://javafx.com/javafx/19"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="erp.controller.EstoqueController">
+    <content>
+        <VBox spacing="15.0" style="-fx-padding: 25;">
+            <children>
+
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <children>
+                        <Label text="Visualizar Estoque" styleClass="page-title"/>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <Button fx:id="btnIrParaCadastro"
+                                onAction="#irParaCadastroEstoque"
+                                text="Ir para Cadastro"
+                                styleClass="btn-primary"/>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="10.0"/>
+                    </VBox.margin>
+                </HBox>
+
+                <!-- Filters -->
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <children>
+                        <Label text="Filtrar por Clube:" styleClass="field-label"/>
+                        <ComboBox fx:id="cbClube" prefWidth="250.0"/>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <Label fx:id="lblTotalCamisas"
+                               text="Total de Peças em Estoque: 0"
+                               style="-fx-font-weight: 800;"
+                               styleClass="muted-label"/>
+                    </children>
+                    <padding>
+                        <Insets bottom="5.0"/>
+                    </padding>
+                </HBox>
+
+                <!-- Estoque adulto -->
+                <Label text="Estoque" styleClass="section-title"/>
+
+                <TableView fx:id="tblEstoque">
+                    <columns>
+                        <TableColumn fx:id="colClubeNome" prefWidth="150.0" text="Clube"/>
+                        <TableColumn fx:id="colModelo" prefWidth="250.0" text="Modelo"/>
+                        <TableColumn fx:id="colTipo" prefWidth="100.0" text="Tipo"/>
+                        <TableColumn fx:id="colP" minWidth="50.0" text="P"/>
+                        <TableColumn fx:id="colM" minWidth="50.0" text="M"/>
+                        <TableColumn fx:id="colG" minWidth="50.0" text="G"/>
+                        <TableColumn fx:id="colGG" minWidth="50.0" text="GG"/>
+                        <TableColumn fx:id="col2GG" minWidth="50.0" text="2GG"/>
+                        <TableColumn fx:id="col3GG" minWidth="50.0" text="3GG"/>
+                        <TableColumn fx:id="col4GG" minWidth="50.0" text="4GG"/>
+                        <TableColumn fx:id="colQuantidade" prefWidth="75.0" text="Total"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+
+                <Separator prefWidth="200.0"/>
+
+                <!-- Estoque infantil -->
+                <Label text="Estoque Infantil" styleClass="section-title"/>
+
+                <TableView fx:id="tblEstoqueInfantil">
+                    <columns>
+                        <TableColumn fx:id="colClubeNomeInfantil" prefWidth="150.0" text="Clube"/>
+                        <TableColumn fx:id="colModeloInfantil" prefWidth="250.0" text="Modelo"/>
+                        <TableColumn fx:id="col16" minWidth="50.0" text="16"/>
+                        <TableColumn fx:id="col18" minWidth="50.0" text="18"/>
+                        <TableColumn fx:id="col20" minWidth="50.0" text="20"/>
+                        <TableColumn fx:id="col22" minWidth="50.0" text="22"/>
+                        <TableColumn fx:id="col24" minWidth="50.0" text="24"/>
+                        <TableColumn fx:id="col26" minWidth="50.0" text="26"/>
+                        <TableColumn fx:id="col28" minWidth="50.0" text="28"/>
+                        <TableColumn fx:id="colQuantidadeInfantil" prefWidth="75.0" text="Total"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+
+            </children>
+        </VBox>
+    </content>
 </ScrollPane>

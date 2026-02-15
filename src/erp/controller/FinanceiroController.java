@@ -65,21 +65,21 @@ public class FinanceiroController implements Initializable {
         // A consulta foi alterada para usar APENAS o custo registrado no momento da venda.
         // Isso evita que o custo atual de um produto seja usado para calcular o lucro de vendas antigas.
         String sql = "SELECT " +
-                     "  (SELECT COALESCE(SUM(ValorFinalVenda), 0) FROM Vendas WHERE DataVenda BETWEEN ? AND ?) as Faturamento, " +
+                     "  (SELECT COALESCE(SUM(ValorFinalVenda), 0) FROM Vendas WHERE DataVenda >= ? AND DataVenda < ?) as Faturamento, " +
                      "  (SELECT COALESCE(SUM(IV.CustoMedioUnitarioRegistrado * IV.Quantidade), 0) " +
                      "   FROM ItensVenda IV JOIN Vendas V ON IV.VendaID = V.VendaID " +
-                     "   WHERE V.DataVenda BETWEEN ? AND ?) as CustoProdutosVendidos, " +
-                     "  (SELECT COUNT(VendaID) FROM Vendas WHERE DataVenda BETWEEN ? AND ?) as NumeroVendasUnicas";
+                     "   WHERE V.DataVenda >= ? AND V.DataVenda < ?) as CustoProdutosVendidos, " +
+                     "  (SELECT COUNT(VendaID) FROM Vendas WHERE DataVenda >= ? AND DataVenda < ?) as NumeroVendasUnicas";
 
         try (Connection con = UTIL.ConexaoBanco.conectar();
              PreparedStatement pst = con.prepareStatement(sql)) {
 
             pst.setDate(1, java.sql.Date.valueOf(dataInicio));
-            pst.setDate(2, java.sql.Date.valueOf(dataFim));
+            pst.setDate(2, java.sql.Date.valueOf(dataFim.plusDays(1)));
             pst.setDate(3, java.sql.Date.valueOf(dataInicio));
-            pst.setDate(4, java.sql.Date.valueOf(dataFim));
+            pst.setDate(4, java.sql.Date.valueOf(dataFim.plusDays(1)));
             pst.setDate(5, java.sql.Date.valueOf(dataInicio));
-            pst.setDate(6, java.sql.Date.valueOf(dataFim));
+            pst.setDate(6, java.sql.Date.valueOf(dataFim.plusDays(1)));
             
             ResultSet rs = pst.executeQuery();
 
@@ -132,7 +132,7 @@ public class FinanceiroController implements Initializable {
                      "  SUM(V.ValorFinalVenda) as Faturamento, " +
                      "  SUM((SELECT COALESCE(SUM(IV.CustoMedioUnitarioRegistrado * IV.Quantidade), 0) FROM ItensVenda IV WHERE IV.VendaID = V.VendaID)) as Custo " +
                      "FROM Vendas V " +
-                     "WHERE V.DataVenda BETWEEN ? AND ? " +
+                     "WHERE V.DataVenda >= ? AND V.DataVenda < ? " +
                      "GROUP BY YEAR(V.DataVenda), MONTH(V.DataVenda) " +
                      "ORDER BY Ano, Mes";
         
@@ -147,7 +147,7 @@ public class FinanceiroController implements Initializable {
              PreparedStatement pst = con.prepareStatement(sql)) {
 
             pst.setDate(1, java.sql.Date.valueOf(dataInicio));
-            pst.setDate(2, java.sql.Date.valueOf(dataFim));
+            pst.setDate(2, java.sql.Date.valueOf(dataFim.plusDays(1)));
             ResultSet rs = pst.executeQuery();
 
             while(rs.next()){

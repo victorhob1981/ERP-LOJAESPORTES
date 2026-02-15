@@ -237,8 +237,8 @@ public class TelaVendasController implements Initializable {
     
     @FXML
     private void salvarVenda() {
-        if (produtoSelecionado == null || cbTipo.getValue() == null || tamanhoSelecionadoDetalhe == null || dpDataVenda.getValue() == null || txtQuantidadeVendida.getText().trim().isEmpty() || txtValorVenda.getText().trim().isEmpty()) {
-            mostrarAlerta("Erro de Validação", "Produto, Tipo, Tamanho, Data, Quantidade e Preço Unitário são obrigatórios.", Alert.AlertType.ERROR);
+        if (produtoSelecionado == null || cbTipo.getValue() == null || tamanhoSelecionadoDetalhe == null || dpDataVenda.getValue() == null || txtQuantidadeVendida.getText().trim().isEmpty() || txtValorVenda.getText().trim().isEmpty() || cbMetodoPagamento.getValue() == null) {
+            mostrarAlerta("Erro de Validação", "Produto, Tipo, Tamanho, Data, Quantidade, Preço Unitário e Método de Pagamento são obrigatórios.", Alert.AlertType.ERROR);
             return;
         }
 
@@ -252,6 +252,10 @@ public class TelaVendasController implements Initializable {
             if (!txtDesconto.getText().trim().isEmpty()) valorDesconto = Double.parseDouble(txtDesconto.getText().trim().replace(",", "."));
             if (quantidadeVendida <= 0) {
                  mostrarAlerta("Erro de Validação", "A quantidade deve ser maior que zero.", Alert.AlertType.ERROR);
+                return;
+            }
+            if (valorDesconto < 0) {
+                mostrarAlerta("Erro de Validação", "O desconto não pode ser negativo.", Alert.AlertType.ERROR);
                 return;
             }
         } catch (NumberFormatException e) {
@@ -269,6 +273,10 @@ public class TelaVendasController implements Initializable {
     
 
         double valorTotalItens = precoUnitarioVenda * quantidadeVendida;
+        if (valorDesconto > valorTotalItens) {
+            mostrarAlerta("Erro de Validação", "O desconto não pode ser maior que o valor total dos itens.", Alert.AlertType.ERROR);
+            return;
+        }
         double valorFinalVenda = valorTotalItens - valorDesconto;
         String nomeCliente = txtNomeCliente.getText().trim();
         LocalDate dataVendaLocal = dpDataVenda.getValue();
@@ -341,9 +349,15 @@ public class TelaVendasController implements Initializable {
 
     private Integer getClienteID(Connection con, String nomeCliente) throws SQLException {
         if (nomeCliente == null || nomeCliente.trim().isEmpty()) {
-            String sqlConsumidor = "SELECT ClienteID FROM Clientes WHERE NomeCliente = 'Consumidor Final'";
+            String sqlConsumidor = "SELECT ClienteID FROM Clientes WHERE NomeCliente IN ('Cliente Consumidor', 'Consumidor Final') LIMIT 1";
             try(PreparedStatement pst = con.prepareStatement(sqlConsumidor); ResultSet rs = pst.executeQuery()){
                 if(rs.next()) return rs.getInt("ClienteID");
+            }
+            String sqlNovo = "INSERT INTO Clientes (NomeCliente) VALUES ('Cliente Consumidor')";
+            try (PreparedStatement pstNovo = con.prepareStatement(sqlNovo, Statement.RETURN_GENERATED_KEYS)) {
+                pstNovo.executeUpdate();
+                ResultSet chaves = pstNovo.getGeneratedKeys();
+                if (chaves.next()) return chaves.getInt(1);
             }
             return null;
         }
