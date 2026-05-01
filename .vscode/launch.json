@@ -3,31 +3,17 @@
     "configurations": [
         {
             "type": "java",
-            "name": "MigracaoService",
-            "request": "launch",
-            "mainClass": "UTIL.MigracaoService",
-            "projectName": "ERP 2.0_f1af0be3"
-        },
-        {
-            "type": "java",
             "name": "ConexaoBanco",
             "request": "launch",
             "mainClass": "UTIL.ConexaoBanco",
-            "projectName": "ERP 2.0_f1af0be3"
-        },
-        {
-            "type": "java",
-            "name": "TesteConsole",
-            "request": "launch",
-            "mainClass": "erp.application.TesteConsole",
-            "projectName": "ERP 2.0_f1af0be3"
+            "cwd": "${workspaceFolder}"
         },
         {
             "type": "java",
             "name": "Executar Aplicação ERP",
             "request": "launch",
             "mainClass": "erp.application.Main",
-            "projectName": "ERP 2.0_f1af0be3",
+            "cwd": "${workspaceFolder}",
             "vmArgs": [
                 "--module-path",
                 "C:/javafx-sdk-24.0.1/lib",
