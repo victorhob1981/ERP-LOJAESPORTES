@@ -1,8 +1,12 @@
 package erp.controller;
 
+import UTIL.DatabaseConfig;
+
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -12,13 +16,23 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class MainLayoutController implements Initializable {
@@ -167,6 +181,189 @@ public class MainLayoutController implements Initializable {
     @FXML
     public void irParaRelatorioProdutos(ActionEvent event) {
         loadPage("RelatorioProdutos.fxml", btnNavRelatorioProdutos);
+    }
+
+    @FXML
+    private void abrirConfiguracaoBanco(ActionEvent event) {
+        DatabaseConfig config = DatabaseConfig.load();
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Configuração do Banco");
+        dialog.setHeaderText(null);
+        URL cssUrl = getClass().getResource("/erp/view/erp-modern.css");
+        if (cssUrl != null) {
+            dialog.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+        }
+        dialog.getDialogPane().getStyleClass().add("db-config-dialog");
+
+        ButtonType testarButtonType = new ButtonType("Testar Conexão", ButtonBar.ButtonData.OTHER);
+        ButtonType salvarButtonType = new ButtonType("Salvar Configuração", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(testarButtonType, salvarButtonType, ButtonType.CANCEL);
+
+        TextField txtHost = new TextField(config.getHost());
+        TextField txtPorta = new TextField(String.valueOf(config.getPort()));
+        TextField txtBanco = new TextField(config.getDatabaseName());
+        TextField txtUsuario = new TextField(config.getUser());
+        PasswordField txtSenha = new PasswordField();
+        txtSenha.setText(config.getPassword());
+        CheckBox chkSsl = new CheckBox("Usar SSL");
+        chkSsl.setSelected(config.isUseSSL());
+
+        definirLarguraCampo(txtHost, txtPorta, txtBanco, txtUsuario, txtSenha);
+
+        Label lblIcone = new Label("DB");
+        lblIcone.getStyleClass().add("db-config-icon");
+        Label lblTitulo = new Label("Configuração do Banco");
+        lblTitulo.getStyleClass().add("db-config-title");
+        Label lblSubtitulo = new Label("Conexão MySQL");
+        lblSubtitulo.getStyleClass().add("db-config-subtitle");
+
+        VBox tituloBox = new VBox(2, lblTitulo, lblSubtitulo);
+        HBox header = new HBox(12, lblIcone, tituloBox);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        GridPane grid = criarGridConfiguracao(txtHost, txtPorta, txtBanco, txtUsuario, txtSenha, chkSsl);
+
+        Label lblArquivoTitulo = new Label("Arquivo de configuração");
+        lblArquivoTitulo.getStyleClass().add("field-label");
+        Label lblArquivo = new Label(config.describeSource());
+        lblArquivo.setWrapText(true);
+        lblArquivo.getStyleClass().add("db-config-path");
+
+        VBox arquivoBox = new VBox(4, lblArquivoTitulo, lblArquivo);
+        arquivoBox.getStyleClass().add("db-config-file-box");
+
+        Label lblStatus = new Label("");
+        lblStatus.setManaged(false);
+        lblStatus.setVisible(false);
+        lblStatus.getStyleClass().add("db-config-status");
+
+        VBox content = new VBox(16, header, grid, arquivoBox, lblStatus);
+        content.getStyleClass().add("db-config-content");
+        dialog.getDialogPane().setContent(content);
+
+        Button btnTestar = (Button) dialog.getDialogPane().lookupButton(testarButtonType);
+        btnTestar.getStyleClass().add("btn-secondary");
+        btnTestar.addEventFilter(ActionEvent.ACTION, action -> {
+            action.consume();
+            testarConfiguracao(txtHost, txtPorta, txtBanco, txtUsuario, txtSenha, chkSsl, lblStatus);
+        });
+
+        Button btnSalvar = (Button) dialog.getDialogPane().lookupButton(salvarButtonType);
+        btnSalvar.getStyleClass().add("btn-primary");
+        btnSalvar.addEventFilter(ActionEvent.ACTION, action -> {
+            action.consume();
+            salvarConfiguracao(txtHost, txtPorta, txtBanco, txtUsuario, txtSenha, chkSsl, lblStatus);
+        });
+        Button btnCancelar = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+        btnCancelar.getStyleClass().add("btn-secondary");
+
+        dialog.showAndWait();
+    }
+
+    private GridPane criarGridConfiguracao(TextField txtHost, TextField txtPorta, TextField txtBanco,
+            TextField txtUsuario, PasswordField txtSenha, CheckBox chkSsl) {
+        GridPane grid = new GridPane();
+        grid.getStyleClass().add("db-config-grid");
+        grid.setHgap(14);
+        grid.setVgap(10);
+        grid.add(criarLabelCampo("Host"), 0, 0);
+        grid.add(txtHost, 1, 0);
+        grid.add(criarLabelCampo("Porta"), 0, 1);
+        grid.add(txtPorta, 1, 1);
+        grid.add(criarLabelCampo("Banco"), 0, 2);
+        grid.add(txtBanco, 1, 2);
+        grid.add(criarLabelCampo("Usuário"), 0, 3);
+        grid.add(txtUsuario, 1, 3);
+        grid.add(criarLabelCampo("Senha"), 0, 4);
+        grid.add(txtSenha, 1, 4);
+        grid.add(chkSsl, 1, 5);
+        GridPane.setHgrow(txtHost, Priority.ALWAYS);
+        GridPane.setHgrow(txtPorta, Priority.ALWAYS);
+        GridPane.setHgrow(txtBanco, Priority.ALWAYS);
+        GridPane.setHgrow(txtUsuario, Priority.ALWAYS);
+        GridPane.setHgrow(txtSenha, Priority.ALWAYS);
+        return grid;
+    }
+
+    private Label criarLabelCampo(String texto) {
+        Label label = new Label(texto);
+        label.getStyleClass().add("field-label");
+        return label;
+    }
+
+    private void definirLarguraCampo(TextField... campos) {
+        for (TextField campo : campos) {
+            campo.setPrefWidth(360);
+            campo.setMaxWidth(Double.MAX_VALUE);
+        }
+    }
+
+    private void testarConfiguracao(TextField txtHost, TextField txtPorta, TextField txtBanco, TextField txtUsuario,
+            PasswordField txtSenha, CheckBox chkSsl, Label lblStatus) {
+        DatabaseConfig config = criarConfigDoFormulario(txtHost, txtPorta, txtBanco, txtUsuario, txtSenha, chkSsl);
+        if (config == null) {
+            return;
+        }
+
+        try {
+            config.testConnection();
+            atualizarStatus(lblStatus, "Conexão estabelecida com " + config.describeTarget() + ".", true);
+        } catch (SQLException e) {
+            atualizarStatus(lblStatus,
+                    "Não foi possível conectar em " + config.describeTarget() + ". Detalhe: " + e.getMessage(), false);
+        }
+    }
+
+    private void salvarConfiguracao(TextField txtHost, TextField txtPorta, TextField txtBanco,
+            TextField txtUsuario, PasswordField txtSenha, CheckBox chkSsl, Label lblStatus) {
+        DatabaseConfig config = criarConfigDoFormulario(txtHost, txtPorta, txtBanco, txtUsuario, txtSenha, chkSsl);
+        if (config == null) {
+            return;
+        }
+
+        try {
+            config.save();
+            atualizarStatus(lblStatus, "Configuração salva em " + config.describeSource() + ".", true);
+        } catch (IOException e) {
+            atualizarStatus(lblStatus, "Não foi possível salvar a configuração. Detalhe: " + e.getMessage(), false);
+        }
+    }
+
+    private DatabaseConfig criarConfigDoFormulario(TextField txtHost, TextField txtPorta, TextField txtBanco,
+            TextField txtUsuario, PasswordField txtSenha, CheckBox chkSsl) {
+        String host = txtHost.getText().trim();
+        String banco = txtBanco.getText().trim();
+        String usuario = txtUsuario.getText().trim();
+
+        if (host.isEmpty() || banco.isEmpty() || usuario.isEmpty()) {
+            mostrarAlerta("Campos Obrigatórios", "Host, banco e usuário são obrigatórios.", Alert.AlertType.WARNING);
+            return null;
+        }
+
+        try {
+            int porta = Integer.parseInt(txtPorta.getText().trim());
+            return DatabaseConfig.fromValues(host, porta, banco, usuario, txtSenha.getText(), chkSsl.isSelected());
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Porta Inválida", "A porta do banco precisa ser um número.", Alert.AlertType.WARNING);
+            return null;
+        }
+    }
+
+    private void atualizarStatus(Label lblStatus, String mensagem, boolean sucesso) {
+        lblStatus.setText(mensagem);
+        lblStatus.setManaged(true);
+        lblStatus.setVisible(true);
+        lblStatus.getStyleClass().removeAll("db-config-status-success", "db-config-status-error");
+        lblStatus.getStyleClass().add(sucesso ? "db-config-status-success" : "db-config-status-error");
+    }
+
+    private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
 }
 

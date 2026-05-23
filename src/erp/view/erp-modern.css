@@ -85,6 +85,19 @@
     -fx-background-color: -fx-primary-600;
 }
 
+.sidebar-icon-button {
+    -fx-min-width: 40;
+    -fx-pref-width: 40;
+    -fx-max-width: 40;
+    -fx-alignment: CENTER;
+    -fx-padding: 10;
+    -fx-opacity: 0.82;
+}
+
+.sidebar-icon-button:hover {
+    -fx-opacity: 1;
+}
+
 /* ---------- Page header ---------- */
 .page {
     -fx-background-color: transparent;
@@ -309,4 +322,85 @@
 
 .btn-secondary:hover {
     -fx-background-color: -fx-bg;
+}
+
+/* ---------- Database configuration dialog ---------- */
+.db-config-dialog {
+    -fx-background-color: #ffffff;
+}
+
+.db-config-dialog > .content {
+    -fx-padding: 0;
+}
+
+.db-config-dialog .button-bar .container {
+    -fx-padding: 0 24 22 24;
+}
+
+.db-config-dialog .button {
+    -fx-min-height: 34;
+    -fx-padding: 8 14 8 14;
+}
+
+.db-config-content {
+    -fx-padding: 24 24 16 24;
+    -fx-pref-width: 500;
+}
+
+.db-config-icon {
+    -fx-background-color: rgba(79, 70, 229, 0.10);
+    -fx-background-radius: 8;
+    -fx-text-fill: -fx-primary;
+    -fx-font-size: 11px;
+    -fx-font-weight: 900;
+    -fx-alignment: CENTER;
+    -fx-min-width: 36;
+    -fx-min-height: 36;
+}
+
+.db-config-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #0f172a;
+}
+
+.db-config-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-muted-foreground;
+}
+
+.db-config-grid {
+    -fx-background-color: #ffffff;
+}
+
+.db-config-file-box {
+    -fx-background-color: -fx-surface-2;
+    -fx-background-radius: 8;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 10 12 10 12;
+}
+
+.db-config-path {
+    -fx-font-size: 11px;
+    -fx-text-fill: -fx-muted-foreground;
+}
+
+.db-config-status {
+    -fx-background-radius: 8;
+    -fx-padding: 10 12 10 12;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-wrap-text: true;
+}
+
+.db-config-status-success {
+    -fx-background-color: rgba(22, 163, 74, 0.10);
+    -fx-text-fill: #15803d;
+}
+
+.db-config-status-error {
+    -fx-background-color: rgba(220, 38, 38, 0.10);
+    -fx-text-fill: #b91c1c;
 }

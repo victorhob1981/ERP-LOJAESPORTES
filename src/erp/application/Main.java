@@ -1,5 +1,6 @@
 package erp.application;
 
+import UTIL.DatabaseConfig;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,6 +27,7 @@ public void start(Stage primaryStage) {
 }
 
     public static void main(String[] args) {
+        DatabaseConfig.configureFromArgs(args);
         launch(args);
     }
 }
