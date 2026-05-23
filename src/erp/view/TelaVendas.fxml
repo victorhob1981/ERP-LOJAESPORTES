@@ -7,18 +7,20 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.FlowPane?>
 
 <VBox fx:id="vendaFormRoot"
       maxWidth="1200.0"
-      spacing="22.0"
+      spacing="18.0"
       styleClass="page"
       xmlns="http://javafx.com/javafx/19"
       xmlns:fx="http://javafx.com/fxml/1"
@@ -30,20 +32,17 @@
 
    <children>
 
-      <!-- Header -->
       <VBox spacing="6.0">
          <children>
             <Label text="Nova Venda" styleClass="page-title" />
-            <Label text="Registre uma venda, aplique desconto e confirme o pagamento"
+            <Label text="Monte a venda, adicione os itens e finalize o pagamento"
                    styleClass="page-subtitle" />
          </children>
       </VBox>
 
-      <!-- Two-column layout: form (left) + summary (right) -->
       <HBox spacing="18.0">
          <children>
 
-            <!-- Left: Form card -->
             <VBox spacing="14.0" HBox.hgrow="ALWAYS">
                <children>
                   <VBox spacing="14.0" styleClass="card">
@@ -52,29 +51,24 @@
                      </padding>
 
                      <children>
-                        <Label text="Detalhes da venda" styleClass="section-title" />
+                        <Label text="Item da venda" styleClass="section-title" />
 
                         <GridPane hgap="12.0" vgap="12.0">
                            <columnConstraints>
+                              <ColumnConstraints halignment="LEFT" hgrow="NEVER" minWidth="10.0" prefWidth="120.0" />
+                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="250.0" />
                               <ColumnConstraints halignment="LEFT" hgrow="NEVER" minWidth="10.0" prefWidth="140.0" />
-                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="240.0" />
-                              <ColumnConstraints halignment="LEFT" hgrow="NEVER" minWidth="10.0" prefWidth="160.0" />
-                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="240.0" />
+                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="230.0" />
                            </columnConstraints>
 
                            <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
                            </rowConstraints>
 
                            <children>
-
                               <Label text="Produto" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                               <ComboBox fx:id="cbProduto" prefWidth="Infinity"
                                         GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="0" />
@@ -100,48 +94,92 @@
                               <Label text="Preço unitário (R$)" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                               <TextField fx:id="txtValorVenda"
                                          GridPane.columnIndex="3" GridPane.rowIndex="3" />
-
-                              <Label text="Cliente" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                              <TextField fx:id="txtNomeCliente"
-                                         GridPane.columnIndex="1" GridPane.rowIndex="4" />
-
-                              <Label text="Data da venda" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                              <DatePicker fx:id="dpDataVenda" prefWidth="Infinity"
-                                          GridPane.columnIndex="3" GridPane.rowIndex="4" />
-
-                              <Separator GridPane.columnSpan="4" GridPane.rowIndex="5" />
-
-                              <Label text="Desconto (R$)" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                              <TextField fx:id="txtDesconto"
-                                         GridPane.columnIndex="1" GridPane.rowIndex="6" />
-
-                              <Label text="Pago" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                              <CheckBox fx:id="chkPago" mnemonicParsing="false"
-                                        GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="6">
-                                 <GridPane.margin>
-                                    <Insets left="2.0" />
-                                 </GridPane.margin>
-                              </CheckBox>
-
-                              <Label text="Data prometida" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-                              <DatePicker fx:id="dpDataPrometida" prefWidth="Infinity"
-                                          GridPane.columnIndex="1" GridPane.rowIndex="7" />
-
-                              <Label text="Método de pagamento" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                              <ComboBox fx:id="cbMetodoPagamento" prefWidth="Infinity"
-                                        GridPane.columnIndex="3" GridPane.rowIndex="7" />
-
                            </children>
                         </GridPane>
 
+                        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                           <children>
+                              <Button fx:id="btnAdicionarItem"
+                                      mnemonicParsing="false"
+                                      prefWidth="150.0"
+                                      text="Adicionar item"
+                                      styleClass="btn-primary" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+
+                  <VBox spacing="14.0" styleClass="card">
+                     <padding>
+                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
+                     </padding>
+
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="Itens adicionados" styleClass="section-title" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="btnRemoverItem"
+                                      disable="true"
+                                      mnemonicParsing="false"
+                                      text="Remover item"
+                                      styleClass="btn-secondary" />
+                           </children>
+                        </HBox>
+
+                        <TableView fx:id="tblItensVenda" prefHeight="230.0">
+                           <columns>
+                              <TableColumn fx:id="colItemProduto" prefWidth="230.0" text="Produto" />
+                              <TableColumn fx:id="colItemTipo" prefWidth="100.0" text="Tipo" />
+                              <TableColumn fx:id="colItemTamanho" prefWidth="80.0" text="Tam." />
+                              <TableColumn fx:id="colItemQuantidade" prefWidth="80.0" text="Qtd." />
+                              <TableColumn fx:id="colItemPrecoUnitario" prefWidth="120.0" text="Preço unit." />
+                              <TableColumn fx:id="colItemTotal" prefWidth="120.0" text="Total" />
+                           </columns>
+                        </TableView>
                      </children>
                   </VBox>
                </children>
             </VBox>
 
-            <!-- Right: Summary + month stats -->
             <VBox spacing="14.0" prefWidth="360.0">
                <children>
+                  <VBox spacing="14.0" styleClass="card">
+                     <padding>
+                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
+                     </padding>
+
+                     <children>
+                        <Label text="Dados da venda" styleClass="section-title" />
+
+                        <GridPane hgap="10.0" vgap="10.0">
+                           <columnConstraints>
+                              <ColumnConstraints halignment="LEFT" hgrow="NEVER" prefWidth="120.0" />
+                              <ColumnConstraints hgrow="ALWAYS" prefWidth="190.0" />
+                           </columnConstraints>
+
+                           <children>
+                              <Label text="Cliente" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                              <TextField fx:id="txtNomeCliente" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                              <Label text="Data" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                              <DatePicker fx:id="dpDataVenda" prefWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                              <Label text="Desconto (R$)" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                              <TextField fx:id="txtDesconto" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                              <Label text="Pago" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                              <CheckBox fx:id="chkPago" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                              <Label text="Data prometida" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                              <DatePicker fx:id="dpDataPrometida" prefWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                              <Label text="Pagamento" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                              <ComboBox fx:id="cbMetodoPagamento" prefWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
 
                   <VBox spacing="12.0" styleClass="card">
                      <padding>
@@ -194,27 +232,24 @@
                                text="Vendas no Mês: 0" />
                      </children>
                   </VBox>
-
                </children>
             </VBox>
-
          </children>
       </HBox>
 
-      <!-- Actions -->
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Button fx:id="btnLimparCampos"
                     mnemonicParsing="false"
                     onAction="#limparFormularioVenda"
                     prefWidth="150.0"
-                    text="Limpar Campos"
+                    text="Limpar Venda"
                     styleClass="btn-secondary" />
 
             <Button fx:id="btnSalvarVenda"
                     mnemonicParsing="false"
                     prefWidth="150.0"
-                    text="Salvar Venda"
+                    text="Finalizar Venda"
                     styleClass="btn-primary" />
          </children>
       </HBox>
