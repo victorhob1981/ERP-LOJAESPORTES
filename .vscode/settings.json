@@ -1,9 +1,6 @@
 {
     "java.project.sourcePaths": [
-        ".",
-        "src",
-        "..\\..\\sincronizadorv2\\sincronizador\\src\\main\\java",
-        "..\\..\\sincronizadorv2\\sincronizador\\src\\main\\resources"
+        "src"
     ],
     "java.project.outputPath": "bin",
 
@@ -20,6 +17,6 @@
         "c:\\javafx-sdk-24.0.1\\lib\\javafx.controls.jar",
         "lib\\mysql-connector-java-9.3.0.jar",
         "c:\\javafx-sdk-24.0.1\\lib\\javafx.web.jar",
-        "..\\..\\sincronizadorv2\\sincronizador\\target\\dependency\\*.jar"
+        "lib\\sincronizador\\*.jar"
     ]
 }

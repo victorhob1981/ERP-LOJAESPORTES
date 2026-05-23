@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.sincronizador.interfaces.controller.MainController">
+
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Button fx:id="btnSincronizarCatalogo"
+                    text="Sincronizar Catálogo"
+                    onAction="#onSincronizar"/>
+
+            <Button fx:id="btnAssociarImagem"
+                    text="Associar Imagem"
+                    onAction="#onAssociarImagem"/>
+
+            <Button fx:id="btnTrocarImagem"
+                    text="Trocar Imagem"
+                    onAction="#onTrocarImagem"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <ProgressBar fx:id="pbSync" prefWidth="260" visible="false" managed="false"/>
+                <Label fx:id="lblSync" text="" visible="false" managed="false"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <center>
+        <!-- SplitPane: tabela à esquerda, detalhe à direita -->
+        <SplitPane dividerPositions="0.62">
+            <!-- ESQUERDA: tabela -->
+            <TableView fx:id="tabelaProdutos">
+                <columns>
+                    <TableColumn fx:id="colProduto" text="Produto" prefWidth="420"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="120"/>
+                </columns>
+            </TableView>
+
+            <!-- DIREITA: painel de detalhe -->
+            <BorderPane>
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+
+                <!-- área da imagem -->
+                <center>
+                    <StackPane>
+                        <style>
+                            -fx-background-color: #ffffff;
+                            -fx-border-color: #d0d0d0;
+                            -fx-border-width: 1;
+                            -fx-background-radius: 6;
+                            -fx-border-radius: 6;
+                        </style>
+
+                        <ImageView fx:id="imgPreview"
+                                   preserveRatio="true"
+                                   fitWidth="520"
+                                   fitHeight="420" />
+
+                        <Label fx:id="lblSemImagem"
+                               text="Sem imagem associada"
+                               visible="false"
+                               style="-fx-text-fill: #777; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                    </StackPane>
+                </center>
+
+                <!-- faixa inferior de informações -->
+                <bottom>
+                    <VBox spacing="6">
+                        <padding>
+                            <Insets top="10" right="0" bottom="0" left="0"/>
+                        </padding>
+
+                        <Separator/>
+
+                        <Label fx:id="lblProdutoSelecionado"
+                               text="Selecione um produto"
+                               style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                        <HBox spacing="18" alignment="CENTER_LEFT">
+                            <Label text="Status:" style="-fx-text-fill: #555;"/>
+                            <Label fx:id="lblStatusSelecionado" text="—"/>
+
+                            <Label text="Tamanhos:" style="-fx-text-fill: #555;"/>
+                            <Label fx:id="lblTamanhosSelecionado" text="—"/>
+                        </HBox>
+
+                        <HBox spacing="18" alignment="CENTER_LEFT">
+                            <Label text="Ação recomendada:" style="-fx-text-fill: #555;"/>
+                            <Label fx:id="lblAcaoRecomendada" text="—" style="-fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+                </bottom>
+            </BorderPane>
+        </SplitPane>
+    </center>
+
+</BorderPane>
+
+

@@ -1,8 +1,6 @@
 $ErrorActionPreference = "Stop"
 
 $repo = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$syncRepo = (Resolve-Path (Join-Path $repo "..\..\sincronizadorv2\sincronizador")).Path
-$syncDeps = Join-Path $syncRepo "target\dependency"
 $jdkBin = "C:\Program Files\Java\jdk-24\bin"
 $javafxSdk = "C:\javafx-sdk-24.0.1"
 
@@ -18,29 +16,24 @@ if (Test-Path $build) {
 
 New-Item -ItemType Directory -Path $classes, $input, $dist | Out-Null
 
-& mvn -q -f (Join-Path $syncRepo "pom.xml") dependency:copy-dependencies -DincludeScope=runtime | Out-Host
-
-Get-ChildItem -Path (Join-Path $repo "src"), (Join-Path $repo "UTIL"), (Join-Path $syncRepo "src\main\java") -Recurse -Filter "*.java" |
+Get-ChildItem -Path (Join-Path $repo "src") -Recurse -Filter "*.java" |
     ForEach-Object {
         $fullName = $_.FullName
-        if ($fullName.StartsWith($repo, [System.StringComparison]::OrdinalIgnoreCase)) {
-            '"' + $fullName.Substring($repo.Length + 1).Replace("\", "/") + '"'
-        } else {
-            '"' + $fullName.Replace("\", "/") + '"'
-        }
+        '"' + $fullName.Substring($repo.Length + 1).Replace("\", "/") + '"'
     } |
     Set-Content -Path $sources -Encoding ASCII
 
 Push-Location $repo
 try {
     & (Join-Path $jdkBin "javac.exe") -encoding UTF-8 `
-        -cp "lib\*;$syncDeps\*;$javafxSdk\lib\*" `
+        -cp "lib\*;lib\sincronizador\*;$javafxSdk\lib\*" `
         -d $classes `
         "@$sources"
 
     New-Item -ItemType Directory -Path (Join-Path $classes "erp\view") -Force | Out-Null
     Copy-Item -Path "src\erp\view\*" -Destination (Join-Path $classes "erp\view") -Recurse -Force
-    Copy-Item -Path (Join-Path $syncRepo "src\main\resources\*") -Destination $classes -Recurse -Force
+    Copy-Item -Path "src\interfaces" -Destination $classes -Recurse -Force
+    Copy-Item -Path "src\app.properties" -Destination $classes -Force
 
     & (Join-Path $jdkBin "jar.exe") --create `
         --file (Join-Path $input "ERP-2.0.jar") `
@@ -48,9 +41,12 @@ try {
         -C $classes .
 
     Copy-Item -Path "lib\*.jar" -Destination $input -Force
-    Copy-Item -Path (Join-Path $syncDeps "*.jar") -Destination $input -Force
+    Copy-Item -Path "lib\sincronizador\*.jar" -Destination $input -Force
     Copy-Item -Path "$javafxSdk\lib\*.jar" -Destination $input -Force
     Copy-Item -Path "$javafxSdk\bin\*.dll" -Destination $input -Force
+    Copy-Item -Path "data" -Destination $input -Recurse -Force
+    New-Item -ItemType Directory -Path (Join-Path $input "config\google") -Force | Out-Null
+    Copy-Item -Path "config\google\credentials.json" -Destination (Join-Path $input "config\google\credentials.json") -Force
 
     & (Join-Path $jdkBin "jpackage.exe") --type app-image `
         --dest $dist `
@@ -60,7 +56,9 @@ try {
         --main-class erp.application.Launcher `
         --app-version 2.0.0 `
         --vendor "Victor Hugo" `
-        --java-options '-Djava.library.path=$APPDIR'
+        --java-options '-Djava.library.path=$APPDIR' `
+        --java-options '-Dsincronizador.credentials.json=$APPDIR\config\google\credentials.json' `
+        --java-options '-Dsincronizador.catalogo.data.dir=$APPDIR\data\catalogo'
 
     Compress-Archive -Path (Join-Path $dist "ERP 2.0") `
         -DestinationPath (Join-Path $dist "ERP-2.0-portable.zip") `

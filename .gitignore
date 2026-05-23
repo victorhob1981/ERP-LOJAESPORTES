@@ -1,3 +1,5 @@
 bin/
 build/
+build-integrado/
 config/application-dev.properties
+config/google/tokens/

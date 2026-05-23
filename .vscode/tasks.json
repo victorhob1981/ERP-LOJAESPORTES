@@ -10,7 +10,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$sync = Resolve-Path '..\\..\\sincronizadorv2\\sincronizador'; mvn -q -f (Join-Path $sync 'pom.xml') dependency:copy-dependencies -DincludeScope=runtime; $files = Get-ChildItem 'src','UTIL',(Join-Path $sync 'src\\main\\java') -Recurse -Filter *.java | ForEach-Object FullName; & javac --module-path 'C:/javafx-sdk-24.0.1/lib' --add-modules javafx.controls,javafx.fxml -cp \"lib/*;$sync/target/dependency/*\" -d 'bin' $files"
+        "$files = Get-ChildItem 'src' -Recurse -Filter *.java | ForEach-Object FullName; & javac --module-path 'C:/javafx-sdk-24.0.1/lib' --add-modules javafx.controls,javafx.fxml -cp 'lib/*;lib/sincronizador/*' -d 'bin' $files; New-Item -ItemType Directory -Path 'bin/erp/view' -Force | Out-Null; Copy-Item -Path 'src/erp/view/*' -Destination 'bin/erp/view' -Recurse -Force; Copy-Item -Path 'src/interfaces' -Destination 'bin' -Recurse -Force; Copy-Item -Path 'src/app.properties' -Destination 'bin' -Force"
       ],
       "group": {
         "kind": "build",
