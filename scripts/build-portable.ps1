@@ -1,6 +1,8 @@
 $ErrorActionPreference = "Stop"
 
 $repo = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$syncRepo = (Resolve-Path (Join-Path $repo "..\..\sincronizadorv2\sincronizador")).Path
+$syncDeps = Join-Path $syncRepo "target\dependency"
 $jdkBin = "C:\Program Files\Java\jdk-24\bin"
 $javafxSdk = "C:\javafx-sdk-24.0.1"
 
@@ -16,26 +18,37 @@ if (Test-Path $build) {
 
 New-Item -ItemType Directory -Path $classes, $input, $dist | Out-Null
 
-Get-ChildItem -Path (Join-Path $repo "src"), (Join-Path $repo "UTIL") -Recurse -Filter "*.java" |
-    ForEach-Object { $_.FullName.Substring($repo.Length + 1).Replace("\", "/") } |
+& mvn -q -f (Join-Path $syncRepo "pom.xml") dependency:copy-dependencies -DincludeScope=runtime | Out-Host
+
+Get-ChildItem -Path (Join-Path $repo "src"), (Join-Path $repo "UTIL"), (Join-Path $syncRepo "src\main\java") -Recurse -Filter "*.java" |
+    ForEach-Object {
+        $fullName = $_.FullName
+        if ($fullName.StartsWith($repo, [System.StringComparison]::OrdinalIgnoreCase)) {
+            '"' + $fullName.Substring($repo.Length + 1).Replace("\", "/") + '"'
+        } else {
+            '"' + $fullName.Replace("\", "/") + '"'
+        }
+    } |
     Set-Content -Path $sources -Encoding ASCII
 
 Push-Location $repo
 try {
     & (Join-Path $jdkBin "javac.exe") -encoding UTF-8 `
-        -cp "lib\mysql-connector-java-9.3.0.jar;$javafxSdk\lib\*" `
+        -cp "lib\*;$syncDeps\*;$javafxSdk\lib\*" `
         -d $classes `
         "@$sources"
 
     New-Item -ItemType Directory -Path (Join-Path $classes "erp\view") -Force | Out-Null
     Copy-Item -Path "src\erp\view\*" -Destination (Join-Path $classes "erp\view") -Recurse -Force
+    Copy-Item -Path (Join-Path $syncRepo "src\main\resources\*") -Destination $classes -Recurse -Force
 
     & (Join-Path $jdkBin "jar.exe") --create `
         --file (Join-Path $input "ERP-2.0.jar") `
         --main-class erp.application.Launcher `
         -C $classes .
 
-    Copy-Item -Path "lib\mysql-connector-java-9.3.0.jar" -Destination $input -Force
+    Copy-Item -Path "lib\*.jar" -Destination $input -Force
+    Copy-Item -Path (Join-Path $syncDeps "*.jar") -Destination $input -Force
     Copy-Item -Path "$javafxSdk\lib\*.jar" -Destination $input -Force
     Copy-Item -Path "$javafxSdk\bin\*.dll" -Destination $input -Force
 

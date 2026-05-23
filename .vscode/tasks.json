@@ -10,7 +10,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$files = Get-ChildItem 'src','UTIL' -Recurse -Filter *.java | ForEach-Object FullName; & javac --module-path 'C:/javafx-sdk-24.0.1/lib' --add-modules javafx.controls,javafx.fxml -cp 'lib/mysql-connector-java-9.3.0.jar' -d 'bin' $files"
+        "$sync = Resolve-Path '..\\..\\sincronizadorv2\\sincronizador'; mvn -q -f (Join-Path $sync 'pom.xml') dependency:copy-dependencies -DincludeScope=runtime; $files = Get-ChildItem 'src','UTIL',(Join-Path $sync 'src\\main\\java') -Recurse -Filter *.java | ForEach-Object FullName; & javac --module-path 'C:/javafx-sdk-24.0.1/lib' --add-modules javafx.controls,javafx.fxml -cp \"lib/*;$sync/target/dependency/*\" -d 'bin' $files"
       ],
       "group": {
         "kind": "build",

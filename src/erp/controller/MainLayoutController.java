@@ -44,7 +44,7 @@ public class MainLayoutController implements Initializable {
     @FXML
     private VBox sidebar;
     @FXML
-    private Button btnNavDashboard, btnNavRegistrarVenda, btnNavHistoricoVendas, btnNavGerenciarEstoque;
+    private Button btnNavDashboard, btnNavRegistrarVenda, btnNavHistoricoVendas, btnNavGerenciarEstoque, btnNavCatalogo;
     @FXML
     private Button btnNavRegistrarPedido, btnNavAcompanhamento, btnNavEncomendas, btnNavFinanceiro;
 
@@ -59,7 +59,7 @@ public class MainLayoutController implements Initializable {
         navButtons = Arrays.asList(btnNavDashboard, btnNavRegistrarVenda, btnNavHistoricoVendas, btnNavGerenciarEstoque,
                 btnNavRegistrarPedido, btnNavAcompanhamento, btnNavEncomendas, btnNavFinanceiro,
                 // --- MUDANÇA 2: Adicionar o novo botão à lista ---
-                btnNavRelatorioProdutos);
+                btnNavRelatorioProdutos, btnNavCatalogo);
         irParaDashboard(null);
     }
 
@@ -115,6 +115,11 @@ public class MainLayoutController implements Initializable {
     @FXML
     public void irParaGerenciarEstoque(ActionEvent event) {
         loadPage("TelaEstoque.fxml", btnNavGerenciarEstoque);
+    }
+
+    @FXML
+    public void irParaCatalogo(ActionEvent event) {
+        loadPage("TelaCatalogo.fxml", btnNavCatalogo);
     }
 
     @FXML
