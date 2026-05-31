@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -59,6 +60,10 @@ public class LocalCatalogoWriter implements CatalogoLocalWriter {
         if (!fileName.equals(antigo)) {
             index.setProperty(key, fileName);
             persistirIndex();
+        }
+
+        if (removerCopiasNaoIndexadasComMesmoConteudo(fileName, imagemLocal)) {
+            mudou = true;
         }
 
         return mudou;
@@ -163,6 +168,56 @@ public class LocalCatalogoWriter implements CatalogoLocalWriter {
         } catch (IOException e) {
             throw new RuntimeException("Falha ao remover arquivo antigo do catalogo local: " + fileName, e);
         }
+    }
+
+    private boolean removerCopiasNaoIndexadasComMesmoConteudo(String fileNameAtual, File imagemLocal) {
+        String md5Atual;
+        try {
+            md5Atual = Md5Utils.md5Hex(imagemLocal);
+        } catch (Exception e) {
+            return false;
+        }
+
+        Set<String> arquivosIndexados = new HashSet<>();
+        for (String key : index.stringPropertyNames()) {
+            String fileName = index.getProperty(key);
+            if (fileName != null && !fileName.isBlank()) {
+                arquivosIndexados.add(fileName.trim());
+            }
+        }
+
+        boolean removeu = false;
+        try (DirectoryStream<Path> arquivos = Files.newDirectoryStream(catalogoDir)) {
+            for (Path arquivo : arquivos) {
+                if (!Files.isRegularFile(arquivo)) continue;
+
+                Path nomePath = arquivo.getFileName();
+                if (nomePath == null) continue;
+
+                String fileName = nomePath.toString();
+                if (fileName.equals(fileNameAtual)) continue;
+                if (arquivosIndexados.contains(fileName)) continue;
+                if (!ehArquivoImagem(fileName)) continue;
+
+                try {
+                    String md5Arquivo = Md5Utils.md5Hex(arquivo.toFile());
+                    if (md5Atual.equalsIgnoreCase(md5Arquivo)) {
+                        Files.deleteIfExists(arquivo);
+                        removeu = true;
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        } catch (IOException ignored) {
+        }
+
+        return removeu;
+    }
+
+    private boolean ehArquivoImagem(String fileName) {
+        if (fileName == null) return false;
+        String n = fileName.toLowerCase(Locale.ROOT);
+        return n.endsWith(".jpg") || n.endsWith(".jpeg") || n.endsWith(".png") || n.endsWith(".webp");
     }
 
     private String montarNomeArquivo(String key, Disponibilidade disponibilidade, File imagemLocal) {
