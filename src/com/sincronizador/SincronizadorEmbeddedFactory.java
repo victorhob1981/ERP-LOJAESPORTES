@@ -4,6 +4,7 @@ import com.google.api.services.drive.Drive;
 import com.sincronizador.application.usecase.AssociarImagemAoCatalogoUseCase;
 import com.sincronizador.application.usecase.GerarStatusDoCatalogoUseCase;
 import com.sincronizador.application.usecase.SincronizarCatalogoUseCase;
+import com.sincronizador.config.CatalogoDataConfig;
 import com.sincronizador.config.DriveConfig;
 import com.sincronizador.infrastructure.drive.DriveCatalogoReader;
 import com.sincronizador.infrastructure.drive.DriveCatalogoWriter;
@@ -26,7 +27,7 @@ public final class SincronizadorEmbeddedFactory {
     private static final Path CATALOGO_LOCAL_DIR = Path.of(
             "C:\\Users\\Vitinho\\Desktop\\Vitinho Artigos Esportivos\\Catálogo"
     );
-    private static final Path IMAGENS_REPOSITORY_DIR = resolverCatalogoDataDir();
+    private static final Path CATALOGO_DATA_DIR = CatalogoDataConfig.resolverCatalogoDataDir();
 
     private SincronizadorEmbeddedFactory() {}
 
@@ -38,8 +39,11 @@ public final class SincronizadorEmbeddedFactory {
             var estoqueReader = new ErpEstoqueReader();
             var catalogoReader = new DriveCatalogoReader(drive, folderId);
             var catalogoWriter = new DriveCatalogoWriter(drive, folderId);
-            var catalogoLocalWriter = new LocalCatalogoWriter(CATALOGO_LOCAL_DIR);
-            var imagemRepo = new PropertiesImagemRepository(IMAGENS_REPOSITORY_DIR);
+            var catalogoLocalWriter = new LocalCatalogoWriter(
+                    CATALOGO_LOCAL_DIR,
+                    CatalogoDataConfig.resolverCatalogoLocalIndexFile()
+            );
+            var imagemRepo = new PropertiesImagemRepository(CATALOGO_DATA_DIR);
 
             var gerarStatus = new GerarStatusDoCatalogoUseCase(estoqueReader, catalogoReader);
             var sincronizar = new SincronizarCatalogoUseCase(
@@ -86,11 +90,4 @@ public final class SincronizadorEmbeddedFactory {
         return folderId.trim();
     }
 
-    private static Path resolverCatalogoDataDir() {
-        String configured = System.getProperty("sincronizador.catalogo.data.dir");
-        if (configured != null && !configured.isBlank()) {
-            return Path.of(configured.trim());
-        }
-        return Path.of("data", "catalogo");
-    }
 }

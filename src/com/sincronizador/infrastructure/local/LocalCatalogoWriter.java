@@ -1,6 +1,7 @@
 package com.sincronizador.infrastructure.local;
 
 import com.sincronizador.application.port.CatalogoLocalWriter;
+import com.sincronizador.config.CatalogoDataConfig;
 import com.sincronizador.domain.model.Disponibilidade;
 import com.sincronizador.domain.model.SKU;
 import com.sincronizador.domain.service.GeradorDeLegenda;
@@ -23,14 +24,12 @@ import java.util.Set;
 
 public class LocalCatalogoWriter implements CatalogoLocalWriter {
 
-    private static final String INDEX_FILE = "./data/catalogo/catalogo-local.properties";
-
     private final Path catalogoDir;
     private final Path indexFile;
     private final Properties index = new Properties();
 
     public LocalCatalogoWriter(Path catalogoDir) {
-        this(catalogoDir, Path.of(INDEX_FILE));
+        this(catalogoDir, CatalogoDataConfig.resolverCatalogoLocalIndexFile());
     }
 
     public LocalCatalogoWriter(Path catalogoDir, Path indexFile) {

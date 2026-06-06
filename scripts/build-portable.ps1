@@ -44,7 +44,6 @@ try {
     Copy-Item -Path "lib\sincronizador\*.jar" -Destination $input -Force
     Copy-Item -Path "$javafxSdk\lib\*.jar" -Destination $input -Force
     Copy-Item -Path "$javafxSdk\bin\*.dll" -Destination $input -Force
-    Copy-Item -Path "data" -Destination $input -Recurse -Force
     New-Item -ItemType Directory -Path (Join-Path $input "config\google") -Force | Out-Null
     Copy-Item -Path "config\google\credentials.json" -Destination (Join-Path $input "config\google\credentials.json") -Force
 
@@ -57,8 +56,7 @@ try {
         --app-version 2.0.0 `
         --vendor "Victor Hugo" `
         --java-options '-Djava.library.path=$APPDIR' `
-        --java-options '-Dsincronizador.credentials.json=$APPDIR\config\google\credentials.json' `
-        --java-options '-Dsincronizador.catalogo.data.dir=$APPDIR\data\catalogo'
+        --java-options '-Dsincronizador.credentials.json=$APPDIR\config\google\credentials.json'
 
     Compress-Archive -Path (Join-Path $dist "ERP 2.0") `
         -DestinationPath (Join-Path $dist "ERP-2.0-portable.zip") `

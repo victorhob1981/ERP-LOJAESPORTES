@@ -4,11 +4,13 @@ import com.google.api.services.drive.Drive;
 import com.sincronizador.application.usecase.AssociarImagemAoCatalogoUseCase;
 import com.sincronizador.application.usecase.GerarStatusDoCatalogoUseCase;
 import com.sincronizador.application.usecase.SincronizarCatalogoUseCase;
+import com.sincronizador.config.CatalogoDataConfig;
 import com.sincronizador.config.DriveConfig;
 import com.sincronizador.infrastructure.drive.DriveCatalogoReader;
 import com.sincronizador.infrastructure.drive.DriveCatalogoWriter;
 import com.sincronizador.infrastructure.erp.ErpEstoqueReader;
 import com.sincronizador.infrastructure.local.LocalCatalogoWriter;
+import com.sincronizador.infrastructure.local.PropertiesImagemRepository;
 import com.sincronizador.interfaces.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -30,6 +32,7 @@ public class SincronizadorApplication extends Application {
     private static final Path CATALOGO_LOCAL_DIR = Path.of(
             "C:\\Users\\Vitinho\\Desktop\\Vitinho Artigos Esportivos\\Catálogo"
     );
+    private static final Path CATALOGO_DATA_DIR = CatalogoDataConfig.resolverCatalogoDataDir();
 
     @Override
     public void start(Stage stage) {
@@ -44,10 +47,13 @@ public class SincronizadorApplication extends Application {
             var estoqueReader = new ErpEstoqueReader();
             var catalogoReader = new DriveCatalogoReader(drive, folderId);
             var catalogoWriter = new DriveCatalogoWriter(drive, folderId);
-            var catalogoLocalWriter = new LocalCatalogoWriter(CATALOGO_LOCAL_DIR);
+            var catalogoLocalWriter = new LocalCatalogoWriter(
+                    CATALOGO_LOCAL_DIR,
+                    CatalogoDataConfig.resolverCatalogoLocalIndexFile()
+            );
 
             // 4) Repositório local de imagem (associação permanente)
-            var imagemRepo = new com.sincronizador.infrastructure.local.PropertiesImagemRepository();
+            var imagemRepo = new PropertiesImagemRepository(CATALOGO_DATA_DIR);
 
             // 5) Use cases (regras de aplicação)
             // ✅ aqui é estoqueReader + catalogoReader (não imagemRepo)

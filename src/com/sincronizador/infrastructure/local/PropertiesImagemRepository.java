@@ -1,6 +1,7 @@
 package com.sincronizador.infrastructure.local;
 
 import com.sincronizador.application.port.ImagemRepository;
+import com.sincronizador.config.CatalogoDataConfig;
 import com.sincronizador.domain.model.SKU;
 
 import java.io.*;
@@ -17,7 +18,7 @@ public class PropertiesImagemRepository implements ImagemRepository {
     private final Properties props = new Properties();
 
     public PropertiesImagemRepository() {
-        this(Paths.get("./data/catalogo"));
+        this(CatalogoDataConfig.resolverCatalogoDataDir());
     }
 
     public PropertiesImagemRepository(Path baseDir) {
