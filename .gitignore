@@ -2,4 +2,5 @@ bin/
 build/
 build-integrado/
 config/application-dev.properties
+config/google/credentials.json
 config/google/tokens/
